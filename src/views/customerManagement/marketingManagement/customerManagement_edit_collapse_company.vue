@@ -218,6 +218,24 @@
     export default {
         props: ['customerid', 'customertypeText', 'tel', 'customersource'],
         data() {
+            const companynamecheck = (rule, value, callback)=>{
+                if (value == '' || value == null) {
+                    callback(new Error('企业名称不能为空'));
+                } else {
+                        value = encodeURI(value)
+                        console.log(value)
+                        let url = '/customer/findCompanyByName?companyName=' + value
+                        function doSuccess(response) {
+                            console.log(response.data);
+                            if (response.data.data != null) {
+                                callback(new Error('抱歉，公司名重复'));
+                            } else {
+                                callback();    
+                            }
+                        }
+                        this.GetData(url, doSuccess)
+                    }
+                },
             return {
                 loading: true,
                 financelevelValue: [],
@@ -285,7 +303,7 @@
                 },
                 ruleValidate2: {
                     companyname: [
-                        {required: true, trigger: 'blur'}
+                        {required: true, trigger: 'blur',validator: companynamecheck}
                     ],
                     legalrepresentative: [
                         {required: true, trigger: 'blur'},
