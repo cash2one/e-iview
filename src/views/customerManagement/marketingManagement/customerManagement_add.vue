@@ -152,7 +152,17 @@
                     callback();
                 } else {
                     if (re.test(value)) {
-                        callback();
+                        let url = '/customer/findCustomerByTel?tel=' + value
+
+                        function doSuccess(response) {
+                            console.log(response.data);
+                            if (response.data.data != null) {
+                                callback(new Error('抱歉，电话号码重复'));
+                            } else {
+                                callback();
+                            }
+                        }
+                        this.GetData(url, doSuccess)
                     } else {
                         callback(new Error('电话格式不正确'));
                     }
