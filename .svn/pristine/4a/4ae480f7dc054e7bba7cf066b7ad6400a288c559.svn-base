@@ -1,0 +1,145 @@
+<template>
+    <div>
+        <Card>
+            <Row>
+                <ButtonGroup>
+                    <Button type="primary" icon="ios-color-wand-outline">录入</Button>
+                    <Button type="primary" icon="ios-sunny-outline" @click="edi = true">编辑</Button>
+                    <Button type="primary" icon="ios-crop">查看</Button>
+                    <Button type="primary" icon="ios-sunny-outline">删除</Button>
+                    <Button type="primary" icon="ios-sunny-outline">查看二维码</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">导出Excel</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">Excel批量导入</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">导出跟进记录</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">下载模板</Button>
+                </ButtonGroup>
+            </Row>
+
+            <Row style="margin-top: 10px;">
+                <Table
+                        highlight-row
+                        size="small"
+                        :columns="columns"
+                        :data="data"
+                ></Table>
+                <Page size="small" :total="100" show-elevator style="margin-top: 10px"></Page>
+            </Row>
+        </Card>
+    </div>
+</template>
+
+<script>
+
+    export default {
+        data() {
+            return {
+                value1: '2',
+                edi: false,
+                customerid: '',
+                columns: [{
+                    title: '姓名',
+                    key: 'name',
+                    width: 80
+                },
+                    {
+                        title: '电话',
+                        key: 'tel',
+                        width: 120
+                    },
+                    {
+                        title: '客户状态',
+                        key: 'customertype',
+                        width: 100
+                    },
+                    {
+                        title: '客户来源',
+                        key: 'customersource',
+                        width: 100
+                    },
+                    {
+                        title: '客户等级',
+                        key: 'importLevel',
+                        width: 100
+                    },
+                    {
+                        title: '区域',
+                        key: 'area',
+                        width: 80
+                    },
+                    {
+                        title: '创建人',
+                        key: 'createby',
+                    },
+                    {
+                        title: '跟进人',
+                        key: 'followby',
+                    },
+                    {
+                        title: '创建时间',
+                        key: 'createdate',
+                        width: 120
+                    },
+                    {
+                        title: '更新时间',
+                        key: 'updatedate',
+                        width: 120
+                    },
+                    {
+                        title: '微信绑定',
+                        key: 'isbound',
+                        width: 100
+                    }
+                ],
+                data: [],
+            }
+        },
+        methods: {
+            // 表格数据请求
+            getTableData() {
+                var _self = this
+                this.$http.get('/api/findAllMapByPages/0/10')
+                    .then(function (data) {
+                        var response = data.data
+                        for (var i = 0; i < response.length; i++) {
+                            var a = {}
+                            a.name = response[i].name
+                            a.tel = response[i].tel
+                            a.customertype = response[i].customertype
+                            a.customertypeText = response[i].customertypeText
+                            a.customersource = response[i].customersource
+                            a.customersourceText = response[i].customersourceText
+                            a.importLevel = response[i].importLevel
+                            a.importLevelText = response[i].importLevelText
+                            a.area = response[i].area
+                            a.areaText = response[i].areaText
+                            a.createby = response[i].createby
+                            a.followby = response[i].followby
+                            a.createdate = response[i].createdate
+                            a.updatedate = response[i].updatedate
+                            a.isbound = response[i].isbound
+                            a.customerId = response[i].id
+                            a.fixedphone = response[i].fixedphone
+                            a.qq = response[i].qq
+                            a.weixin = response[i].weixin
+                            a.email = response[i].email
+                            a.address = response[i].address
+                            a.backup = response[i].backup
+                            _self.data.push(a)
+                        }
+                    })
+                    .catch(function (data) {
+                        console.log(data)
+                    })
+            }
+        },
+        mounted() {
+            this.getTableData()
+        }
+    }
+</script>
+
+<style scoped>
+    .ivu-form-item {
+        margin-bottom: 2px
+    }
+</style>

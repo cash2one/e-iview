@@ -1,0 +1,112 @@
+<style lang="less">
+    @import './login.less';
+</style>
+
+<template>
+    <div class="login" @keydown.enter="handleSubmit">
+        <div class="login-con">
+            <Card :bordered="false">
+                <p slot="title">
+                    <Icon type="log-in"></Icon>
+                    亿账柜信息管理平台
+                </p>
+                <div class="form-con">
+                    <Form ref="loginForm" :model="form" :rules="rules">
+                        <FormItem prop="userName">
+                            <Input v-model="form.userName" placeholder="用户名"/>
+                            <span slot="prepend">
+                                    <Icon :size="16" type="person"></Icon>
+                                </span>
+                        </FormItem>
+                        <FormItem prop="password">
+                            <Input type="password" v-model="form.password" placeholder="密码"/>
+                            <span slot="prepend">
+                                    <Icon :size="14" type="locked"></Icon>
+                                </span>
+                        </FormItem>
+                        <FormItem prop="code">
+                            <Input v-model="form.code" placeholder="验证码" style="width: 60%"/>
+                            <Img id="randCodeImage" src="/api/createImg" style="float: right;height: 32px"/>
+                        </FormItem>
+                        <FormItem>
+                            <Button @click="handleSubmit" type="primary" long>登录</Button>
+                        </FormItem>
+                    </Form>
+                    <p class="login-tip">© 亿账柜版权所有woa2.0</p>
+                </div>
+            </Card>
+        </div>
+    </div>
+</template>
+
+<script>
+    import Cookies from 'js-cookie';
+
+    export default {
+        data() {
+            return {
+                form: {
+                    userName: '',
+                    password: '',
+                    code: ''
+                },
+                rules: {
+                    userName: [
+                        {required: true, message: '账号不能为空', trigger: 'blur'}
+                    ],
+                    password: [
+                        {required: true, message: '密码不能为空', trigger: 'blur'}
+                    ],
+                    code: [
+                        {required: true, message: '验证码不能为空', trigger: 'blur'}
+                    ]
+                }
+            };
+        },
+        methods: {
+            handleSubmit() {
+                var _self = this
+                this.$refs.loginForm.validate((valid) => {
+                    if (valid) {
+                        Cookies.set('user', _self.form.userName);
+                        Cookies.set('password', _self.form.password);
+                        this.$http({
+                            method: 'post',
+                            url: '/api/login',
+                            data: {
+                                username: _self.form.userName,
+                                password: _self.form.password,
+                                randomCode: _self.form.code
+                            },
+                            headers: {'Content-Type': 'application/json'},
+                        })
+                            .then(function (response) {
+                                console.log(response)
+                                if (response.data.success == true) {
+                                    _self.$router.push({
+                                        name: 'home_index'
+                                    });
+                                } else {
+                                    alert(response.data.msg)
+                                }
+                            })
+                            .catch(function (response) {
+                                console.log(response)
+                            })
+                    }
+                });
+            }
+        },
+        mounted() {
+            $('#randCodeImage').click(function () {
+                var date = new Date();
+                var img = document.getElementById("randCodeImage");
+                img.src = '/api/createImg?a=' + date.getTime();
+            });
+        }
+    };
+</script>
+
+<style>
+
+</style>
