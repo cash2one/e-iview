@@ -39,12 +39,13 @@ module.exports = merge(webpackBaseConfig, {
             name: ['vender-exten', 'vender-base'],
             minChunks: Infinity
         }),
-        new HtmlWebpackPlugin({
+        /** new HtmlWebpackPlugin({
             title: 'iView admin v' + package.version,
             filename: '../index.html',
             template: './src/template/index.ejs',
             inject: false
-        }),
+        }),**/
+        // 插件提示说，ejs文件不匹配，有毒
         new CopyWebpackPlugin([
             {
                 from: 'src/views/main-components/theme-switch/theme'
