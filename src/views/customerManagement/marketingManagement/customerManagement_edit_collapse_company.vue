@@ -218,6 +218,7 @@
     export default {
         props: ['customerid', 'customertypeText', 'tel', 'customersource'],
         data() {
+            // 企业名称校验
             const companynamecheck = (rule, value, callback)=>{
                 if (value == '' || value == null) {
                     callback(new Error('企业名称不能为空'));

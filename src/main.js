@@ -218,7 +218,7 @@ new Vue({
         // 权限菜单过滤相关
         this.$store.commit('updateMenulist');
         // iview-admin检查更新
-        util.checkUpdate(this);
+        // util.checkUpdate(this); // util中未配置
     },
     created () {
         let tagsList = [];

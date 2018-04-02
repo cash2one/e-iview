@@ -146,6 +146,7 @@
                     callback();
                 }
             };
+            // 电话号码校验
             const validateTel = (rule, value, callback) => {
                 let re = /^1\d{10}$/
                 if (value == '' || value == null) {
@@ -250,6 +251,13 @@
             }
         },
         methods: {
+            ok2(){
+
+            },
+
+            cancel2(){
+                
+            },
 
             /*************************录入提交验证********************************/
             ok(name) {

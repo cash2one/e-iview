@@ -263,6 +263,13 @@
             }
         },
         methods: {
+            ok(){
+
+            },
+
+            cancel(){
+
+            },
 
             // 表格数据请求
             getTableData() {
