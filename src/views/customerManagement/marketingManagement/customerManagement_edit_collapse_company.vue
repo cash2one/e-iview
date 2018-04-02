@@ -235,7 +235,7 @@
                         }
                         this.GetData(url, doSuccess)
                     }
-                },
+                };
             return {
                 loading: true,
                 financelevelValue: [],
