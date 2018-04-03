@@ -9,7 +9,7 @@
                 @on-ok="ok('formValidate')"
                 @on-cancel="cancel('formValidate')">
             <Form ref="formValidate" :rules="ruleValidate" :model="formValidate" :label-width="80">
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="姓名" prop="name">
                         <Input size="small" v-model="formValidate.name"/>
@@ -21,7 +21,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="固话" prop="fixedphone">
                         <Input size="small" v-model="formValidate.fixedphone"/>
@@ -33,7 +33,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="微信" prop="weixin">
                         <Input size="small" v-model="formValidate.weixin"/>
@@ -45,7 +45,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="客户状态" prop="customertype">
                         <Cascader trigger="hover" :data="customertypeValue"
@@ -62,7 +62,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="客户等级" prop="importlevel">
                         <Select v-model="formValidate.importlevel" size="small">
@@ -81,7 +81,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="发送短信" prop="issend">
                         <Select v-model="formValidate.issend" size="small">

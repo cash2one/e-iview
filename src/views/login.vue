@@ -73,8 +73,8 @@
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
                         let url = '/user/login/'
-                        Cookies.set('user', _self.form.userName);
-                        Cookies.set('password', _self.form.password);
+                        // Cookies.set('user', _self.form.userName);
+                        // Cookies.set('password', _self.form.password);
                         function doSccess(response) {
                             Cookies.set('user', _self.form.userName);
                             Cookies.set('password', _self.form.password);
