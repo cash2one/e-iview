@@ -15,7 +15,8 @@ fs.open('./build/env.js', 'w', function(err, fd) {
 module.exports = merge(webpackBaseConfig, {
     devServer: {
         disableHostCheck: true,
-        port: 8089,
+        port: 8088,
+        //  测试时，使用8089端口，8088仅为备用
         proxy: {
             '/api': {
                 target: 'http://192.168.0.222:9000/',

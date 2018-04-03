@@ -1,5 +1,6 @@
 import Main from '@/views/Main.vue';
-
+// test作为测试页面接口，不部署到生产阶段，路径test也只适用于开发阶段
+import Test from '@/views/companyManagement/companyTabManagement/companyTable.vue'
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
     path: '/login',
@@ -110,6 +111,12 @@ export const otherRouter = {
 
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
 export const appRouter = [
+    {
+        path: '/test',
+        icon: 'social-windwows',
+        name: 'companyManagement',
+        component:Test
+    },
     {
         path: '/customerManagement',
         icon: 'social-windows',

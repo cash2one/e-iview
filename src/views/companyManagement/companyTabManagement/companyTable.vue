@@ -5,19 +5,18 @@
                 <ButtonGroup>
                     <Button type="primary" icon="plus" @click="isAddChange">录入</Button>
                     <Button type="primary" icon="edit" @click="isEditChange">编辑</Button>
-                    <!--<Button type="primary" icon="ios-crop">查看</Button>-->
-                    <Button type="primary" icon="trash-b" @click="deleteCustomer">删除</Button>
-                    <Button type="primary" icon="grid" @click="getQRcode">查看二维码</Button>
-                    <!--<Button type="primary" icon="ios-color-filter-outline">导出Excel</Button>-->
-                    <!--<Button type="primary" icon="ios-color-filter-outline">Excel批量导入</Button>-->
-                    <!--<Button type="primary" icon="ios-color-filter-outline">导出跟进记录</Button>-->
-                    <!--<Button type="primary" icon="ios-color-filter-outline">下载模板</Button>-->
+                    <Button type="primary" icon="ios-crop">查看</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">导入Excel</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">记账</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">扫码图片</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">交接资料详情</Button>
+                    <Button type="primary" icon="ios-color-filter-outline">导出Excel</Button> 
                 </ButtonGroup>
-                <Poptip
+                <!-- <Poptip
                         style="float: right"
                         placement="bottom-end"
                         @on-popper-show="isSearch(true)"
-                        width="400" @keydown.enter="handleSubmit('formValidate')">
+                        width="400">
                     <Button type="text" icon="funnel" @click="getSelectOptions">筛选</Button>
                     <div class="api" slot="content" v-if="issearch">
                         <Form ref="formValidate" :model="formValidate" :label-width="50" style="margin-top: 15px">
@@ -49,7 +48,7 @@
                                 </FormItem>
                                 </Col>
                             </Row>
-                            <!--  <Row  :gutter="16">
+                            <Row  :gutter="16">
                                   <Col span="12">
                                   <FormItem label="客户状态" prop="customertype">
                                       <Cascader trigger="hover" :data="customertypeValue" v-model="formValidate.customertype"></Cascader>
@@ -60,7 +59,7 @@
                                       <Input v-model="formValidate.name" size="small"></Input>
                                   </FormItem>
                                   </Col>
-                              </Row>-->
+                              </Row>
                             <Row :gutter="16">
                                 <Col span="12">
                                 <FormItem label="微信绑定" prop="isbound">
@@ -98,15 +97,21 @@
                             </center>
                         </Form>
                     </div>
-                </Poptip>
+                </Poptip> 
+            -->
+            <ButtonGroup style="float: right">
+                <Button type="primary" icon="ios-search" @click="search">查询</Button>
+                <Button type="primary" icon="ios-color-filter-outline" @click="reset">重置</Button>                
+            </ButtonGroup>
             </Row>
             <Row style="margin-top: 10px;">
                 <Table
                         highlight-row
                         size="small"
-                        :columns="columns"
+                        :columns="tableHeader"
                         :data="data"
-                        @on-current-change="selectRow"></Table>
+                        @on-current-change="selectRow"
+                        @on-row-click="current_row"></Table>
                 <Page
                         size="small"
                         :total="pageTotal"
@@ -171,45 +176,52 @@
                     isbound: '',
                     area: '',
                 },
-                columns: [{
-                    title: '姓名',
-                    key: 'name',
-                    width: 80
-                },
+                // 表头标题
+                tableHeader: [
                     {
-                        title: '电话',
-                        key: 'tel',
+                        title: '序号',
+                        key: 'id',
+                        width: 60
+                    },
+                    {
+                        title: '公司名称',
+                        key: 'company',
                         width: 120
                     },
                     {
-                        title: '客户状态',
-                        key: 'customertypeText',
-                        width: 100
+                        title: '法人',
+                        key: 'corporation',
+                        width: 120
                     },
                     {
-                        title: '客户来源',
-                        key: 'customersourceText',
-                        width: 100
+                        title: '重要等级',
+                        key: 'customertypeText',
+                        width: 120
+                    },
+                    {
+                        title: '服务地址',
+                        key: 'address',
+                        width: 120
                     },
                     {
                         title: '客户等级',
                         key: 'importLevelText',
-                        width: 100
+                        width: 120
+                    },
+                    {
+                        title: '归属客户',
+                        key: 'attr',
+                        width: 120
+                    },
+                    {
+                        title: '客户电话',
+                        key: 'tel',
+                        width: 120
                     },
                     {
                         title: '区域',
-                        key: 'areaText',
-                        width: 80
-                    },
-                    {
-                        title: '渠道名称',
-                        key: 'createby',
-                        width: 120
-                    },
-                    {
-                        title: '跟进人',
-                        key: 'followby',
-                        width: 120
+                        key: 'area',
+                        width: 60
                     },
                     {
                         title: '创建时间',
@@ -217,40 +229,25 @@
                         width: 120
                     },
                     {
-                        title: '更新时间',
-                        key: 'updatedate',
+                        title: '创建人',
+                        key: 'creator',
                         width: 120
                     },
                     {
-                        title: '微信绑定',
-                        key: 'isbound',
+                        title: '跟进人',
+                        key: 'update',
                         width: 100
                     },
                     {
-                        title: '跟进剩余期限',
-                        key: 'createby',
+                        title: '更新时间',
+                        key: 'updatatime',
                         width: 120
                     },
                     {
-                        title: '商事',
-                        key: 'createby',
+                        title: '操作',
+                        key: 'op',
                         width: 120
-                    },
-                    {
-                        title: '会计',
-                        key: 'createby',
-                        width: 120
-                    },
-                    {
-                        title: '企划',
-                        key: 'createby',
-                        width: 120
-                    },
-                    {
-                        title: '审计',
-                        key: 'createby',
-                        width: 120
-                    },
+                    }
                 ],
                 data: [],
                 pageTotal: '',
@@ -259,15 +256,31 @@
                 customerid: '',
                 customertypeText: '',
                 tel: '',
-                customersource: ''
+                customersource: '',
+
+                select:{}
             }
         },
         methods: {
+
+            //记录当前被点击的行
+            current_row(e){
+                this.select = Object.assign({}, e)
+                console.log(this.select)
+            },
             ok(){
 
             },
 
             cancel(){
+
+            },
+
+            search(){
+
+            },
+
+            reset(){
 
             },
 
