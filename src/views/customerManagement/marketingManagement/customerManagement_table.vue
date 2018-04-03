@@ -21,10 +21,10 @@
                     <Button type="text" icon="funnel" @click="getSelectOptions">筛选</Button>
                     <div class="api" slot="content" v-if="issearch">
                         <Form ref="formValidate" :model="formValidate" :label-width="50" style="margin-top: 15px">
-                            <Row :gutter="16">
+                            <Row :gutter="16" >
                                 <Col span="12">
-                                <FormItem label="客户名称" prop="name">
-                                    <Input v-model="formValidate.name" size="small"></Input>
+                                <FormItem label="客户名称" prop="name"  >
+                                    <Input v-model="formValidate.name" size="small" @keydown.enter.native="handleSubmit('formValidate')"></Input>
                                 </FormItem>
                                 </Col>
                                 <Col span="12">
@@ -33,7 +33,7 @@
                                 </FormItem>
                                 </Col>
                             </Row>
-                            <Row :gutter="16">
+                            <Row :gutter="16" >
                                 <Col span="12">
                                 <FormItem label="创建人" prop="createby">
                                     <Select v-model="formValidate.createby" size="small" filterable>
@@ -61,7 +61,7 @@
                                   </FormItem>
                                   </Col>
                               </Row>-->
-                            <Row :gutter="16">
+                            <Row :gutter="16" >
                                 <Col span="12">
                                 <FormItem label="微信绑定" prop="isbound">
                                     <Select v-model="formValidate.isbound" size="small">
@@ -263,6 +263,9 @@
             }
         },
         methods: {
+            show(){
+                alert("1")
+            },
             ok(){
 
             },

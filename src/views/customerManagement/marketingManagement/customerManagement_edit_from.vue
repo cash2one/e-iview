@@ -70,9 +70,9 @@
                 <FormItem label="更新时间" prop="updatedate">
                     <Input disabled size="small" v-model="formValidate.updatedate"/>
                 </FormItem>
-                <FormItem label="更新人" prop="gxr">
+                <!-- <FormItem label="更新人" prop="gxr">
                     <Input disabled size="small" v-model="formValidate.gxr"/>
-                </FormItem>
+                </FormItem> -->
                 <FormItem label="备注" prop="backup">
                     <Input size="small" type="textarea" v-model="formValidate.backup"/>
                 </FormItem>

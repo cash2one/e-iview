@@ -256,7 +256,6 @@
             },
             addTag(name) {
                 let _self = this
-
                 setTimeout(() => {
                     this.loading = false;
                     this.$refs[name].validate((valid) => {
@@ -281,6 +280,7 @@
                         }
                     })
                 }, 2000)
+
             },
             edit(e) {
                 var _self = this
@@ -294,6 +294,7 @@
                 _self.formValidate2.labelcode = e.row.labelcode
                 _self.formValidate2.labelmemo = e.row.labelmemo
                 _self.formValidate2.id = e.row.id
+
             },
             editTag() {
                 var _self = this
@@ -307,7 +308,9 @@
                         if (response.data.msgCode == '40000') {
                             _self.getTableData()
                         }
+                        vm.$forceUpdate()
                     })
+                    
             },
             remove(e) {
                 var _self = this
@@ -319,7 +322,7 @@
                     })
             },
             cancel(name) {
-                this.$refs[name].resetFields();
+                // this.$refs[name].resetFields();
             }
         },
         mounted() {

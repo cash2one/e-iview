@@ -1,4 +1,7 @@
 <template>
+<!--
+    upload功能好像是失效的
+-->
     <div>
         <Button type="ghost" shape="circle" icon="plus" @click="getSelectOptons();modal33 = true">新增</Button>
         <Timeline style="margin-top: 15px">
@@ -85,16 +88,15 @@
         <Modal
                 v-model="modal33"
                 title="新增跟进"
-                :loading="loading"
-                @on-ok="upload('formValidate')"
+
+                @on-ok="handleSubmit('formValidate');upload('formValidate');"
                 @on-cancel="cancel('formValidate')">
             <Form ref="formValidate" :rules="ruleValidate" :model="formValidate" :label-width="80">
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:64px">
                     <Col span="12">
                     <FormItem label="公司名称" prop="companyId">
                         <Select v-model="formValidate.companyId" size="small">
-                            <Option v-for="item in companynameArray" :value="item.id" :key="item.id">{{ item.companyname
-                                }}
+                            <Option v-for="item in companynameArray" :value="item.id" :key="item.id">{{ item.companyname}}
                             </Option>
                         </Select>
                     </FormItem>
@@ -152,7 +154,14 @@
                     content: '',
                     attIds: ''
                 },
-                ruleValidate: {}
+                ruleValidate: {
+                    followUpType:[
+                        {type: 'string', required: true, message:'必选项', trigger: 'change'}
+                    ],
+                    companyId:[
+                        {type: 'number', required: true, message:'必选项', trigger: 'change'}
+                    ]
+                }
             }
         },
         methods: {
@@ -314,6 +323,7 @@
                         } else {
                             _self.loading = false;
                             _self.$Message.error('更新失败!');
+                            _self.modal33 = true
                         }
                     })
             },
@@ -340,12 +350,20 @@
                             this.$Message.error('更新失败!');
                         }
                     })
-                }, 2000);
+                }, 2000);``
             },
 
             /*************************关闭弹窗，重置表单********************************/
             cancel(name) {
                 this.$refs[name].resetFields();
+            },
+            handleSubmit (name) {
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        // upload('formValidate');                  
+                    } else {
+                    }
+                })
             }
         },
         mounted() {
