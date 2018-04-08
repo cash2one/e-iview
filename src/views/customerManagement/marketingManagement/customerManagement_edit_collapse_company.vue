@@ -78,7 +78,7 @@
                     <Input v-model="formValidate2.createby" disabled></Input>
                 </FormItem>
                 <FormItem label="企业来源" prop="cluesource">
-                    <Select v-model="formValidate2.cluesource" disabled>
+                    <Select v-model="formValidate2.cluesource">
                         <Option v-for="item in customersourceValue" :value="item.value" :key="item.value">{{ item.label
                             }}
                         </Option>

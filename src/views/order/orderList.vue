@@ -15,42 +15,56 @@
                 title="录入"
                 :width="1300"
                 @on-ok="ok4"
-                @on-cancel="cancel">
+                @on-cancel="cancel('formValidate')">
             <Form ref="formValidate" :rules="ruleValidate" :model="formValidate" :label-width="90">
                 <Row :gutter="16">
                     <Col span="8">
-                    <FormItem label="归属公司" prop="customername">
-                        <Input size="small" v-model="formValidate.customername"/>
+                    <FormItem label="归属公司" prop="CompanyName">
+                        <Input size="small" v-model="formValidate.CompanyName" @on-focus="getCompany" readonly/>
                     </FormItem>
                     </Col>
                     <Col span="8">
-                    <FormItem label="归属客户" prop="customername">
-                        <Input size="small" v-model="formValidate.customername"/>
+                    <FormItem label="归属客户" prop="NAME">
+                        <Input size="small" v-model="formValidate.NAME" @on-focus="getCompany" readonly/>
                     </FormItem>
                     </Col>
                     <Col span="8">
                     <FormItem label="缴费时间" prop="customername">
-                        <DatePicker type="datetime" style="width: 200px" v-model="formValidate.date"></DatePicker>
+                        <DatePicker format="yyyy-MM-dd HH:mm:ss" type="datetime" style="width: 200px"
+                                    v-model="formValidate.date"></DatePicker>
                     </FormItem>
                     </Col>
                 </Row>
                 <Row :gutter="16">
                     <Col span="8">
-                    <FormItem label="订单总价" prop="customername">
-                        <Input size="small" v-model="formValidate.customername"/>
+                    <FormItem label="订单总价" prop="zongjia">
+                        <Input size="small" v-model="formValidate.zongjia" readonly/>
                     </FormItem>
                     </Col>
                     <Col span="8">
-                    <FormItem label="已付款" prop="customername">
-                        <Input size="small" v-model="formValidate.customername"/>
+                    <FormItem label="已付款" prop="orderPayNumber">
+                        <Input size="small" v-model="formValidate.orderPayNumber"/>
                     </FormItem>
                     </Col>
                     <Col span="8">
-                    <FormItem label="缴费渠道" prop="customername">
-                        <Select v-model="formValidate.customername" placeholder="Select your city">
-                            <Option value="beijing">New York</Option>
-                            <Option value="shanghai">London</Option>
-                            <Option value="shenzhen">Sydney</Option>
+                    <FormItem label="缴费渠道" prop="payDir">
+                        <Select v-model="formValidate.payDir">
+                            <Option value="gszfb">公司支付宝</Option>
+                            <Option value="gh">工行</Option>
+                            <Option value="zh">招行</Option>
+                            <Option value="wx">微信公众号</Option>
+                            <Option value="gw">官网</Option>
+                            <Option value="other">其他</Option>
+                            <Option value="cash">现金</Option>
+                            <Option value="jhang">建行</Option>
+                            <Option value="nsh">农商行</Option>
+                            <Option value="tb">淘宝</Option>
+                            <Option value="zht">中衡通</Option>
+                            <Option value="jt">锦涛</Option>
+                            <Option value="wjw">魏建伟</Option>
+                            <Option value="zgrzh">转个人账户</Option>
+                            <Option value="dgzfb">东莞支付宝</Option>
+                            <Option value="szgh">深圳工行</Option>
                         </Select>
                     </FormItem>
                     </Col>
@@ -74,16 +88,17 @@
                 </Row>
                 <Row :gutter="16">
                     <Col span="8">
-                    <FormItem label="服务开始月份" prop="customername">
-                        <DatePicker type="date" placeholder="Select date" style="width: 200px"></DatePicker>
+                    <FormItem label="服务开始月份" prop="serviceBeginDate" v-if="isfuwu">
+                        <DatePicker format="yyyy-MM-dd" type="date" style="width: 200px"
+                                    v-model="formValidate.serviceBeginDate"></DatePicker>
                     </FormItem>
                     </Col>
                     <Col span="8">
-                    <FormItem label="国地税报道" prop="customername">
-                        <Select v-model="formValidate.customername" placeholder="Select your city">
-                            <Option value="beijing">New York</Option>
-                            <Option value="shanghai">London</Option>
-                            <Option value="shenzhen">Sydney</Option>
+                    <FormItem label="国地税报道" prop="GDSreport" v-if="iscycle">
+                        <Select v-model="formValidate.GDSreport">
+                            <Option value="ybd">已报道</Option>
+                            <Option value="wbd">未报道</Option>
+                            <Option value="bybd">不用报道</Option>
                         </Select>
                     </FormItem>
                     </Col>
@@ -246,6 +261,7 @@
                     <Button type="primary" icon="plus" @click="orderAdd2()">录入</Button>
                     <Button type="primary" icon="edit" @click="isEditChange">编辑</Button>
                     <Button type="primary" icon="ios-crop" @click="detailCustomers()">查看</Button>
+                    <Button type="primary" icon="ios-crop" @click="flowChart()">查看流程图</Button>
                     <Button type="primary" icon="ios-color-filter-outline">修改</Button>
                     <Button type="primary" icon="ios-color-filter-outline">企划(修改)</Button>
                     <Button type="primary" icon="ios-color-filter-outline" @click="deleteOrder = true">订单作废</Button>
@@ -270,6 +286,39 @@
                         style="margin-top: 10px"></Page>
             </Row>
         </Card>
+        <Modal
+                v-model="selectCompany"
+                title="选择公司"
+                width="50%"
+                @on-ok="ok3"
+                @on-cancel="cancel3">
+            <Row :gutter="16">
+                <Col span="8">
+                <Input v-model="searchCompany" placeholder="输入公司名称搜索" @on-keydown="keyDown">
+                <Button slot="append" icon="ios-search" @click="searchCompanyData"></Button>
+                </Input>
+                </Col>
+            </Row>
+            <Table
+                    style="margin-top: 10px"
+                    border
+                    highlight-row
+                    size="small"
+                    ref="selection"
+                    :columns="columns44"
+                    :data="data4"
+                    @on-row-dblclick="rowSelect"></Table>
+            <Page
+                    size="small"
+                    :total="pageTotal3"
+                    :current.sync="currentPage"
+                    show-total
+                    show-sizer
+                    show-elevator
+                    @on-change="pageChange3"
+                    @on-page-size-change="pageSizeChange3"
+                    style="margin-top: 10px"></Page>
+        </Modal>
     </div>
 </template>
 
@@ -291,10 +340,14 @@
                 detailCustomer: false,
                 orderAddProduct: false,
                 isProductDetail: false,
+                iscycle: false,
+                isfuwu: false,
+                selectCompany: false,
                 itemGrid: '',
                 customerId: '',
                 productId: '',
                 pageTotal: '',
+                pageTotal3: '',
                 pageSize: 10,
                 data3: [],
                 basePropertys: [],
@@ -307,11 +360,35 @@
                 SKU: '',
                 lastObj: {},
                 formValidate: {
+                    zongjia: 0,
+                    orderPayNumber: 0,
                     customername: '',
-                    date: new Date()
+                    GDSreport: '',
+                    payDir: '',
+                    date: new Date(),
+                    serviceBeginDate: new Date()
                 },
                 formValidateDetail: {},
                 ruleValidate: {},
+                columns44: [
+                    {
+                        type: 'index',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        title: '公司名称',
+                        key: 'CompanyName'
+                    },
+                    {
+                        title: '归属客户',
+                        key: 'NAME'
+                    },
+                    {
+                        title: '客户电话',
+                        key: 'TEL'
+                    },
+                ],
                 columns2: [
                     {
                         title: '订单号码',
@@ -415,7 +492,9 @@
                         key: 'productCode'
                     },
                 ],
-                productData: []
+                productData: [],
+                data4: [],
+                isSearch: false
             }
         },
         methods: {
@@ -744,8 +823,16 @@
                 let url = '/order/queryItemDetail?productSkuIds=' + _self.SKU + '&areaId=' + _self.res1[2]
 
                 function doSuccess(response) {
+                    _self.$Message.success('添加成功')
                     _self.orderItemList.push(response.data.data[0])
                     let _department = JSON.parse(response.data.data[0].servicedeparts)
+                    if (response.data.data[0].iscycle != 'N') {
+                        _self.iscycle = true
+                        _self.isfuwu = true
+                    }
+                    for (let i = 0; i < _self.orderItemList.length; i++) {
+                        _self.formValidate.zongjia += Number(_self.orderItemList[i].paynumber)
+                    }
 
                     $('#orderItemList').datagrid({
                         idField: 'id',
@@ -854,6 +941,10 @@
                                 if (_self.endEditing()) {
                                     $('#orderItemList').datagrid('selectRow', index).datagrid('beginEdit', index);
                                     editIndex = index;
+                                    _self.formValidate.zongjia = 0
+                                    for (let i = 0; i < _self.orderItemList.length; i++) {
+                                        _self.formValidate.zongjia += Number(_self.orderItemList[i].paynumber)
+                                    }
                                 } else {
                                     $('#orderItemList').datagrid('selectRow', editIndex);
                                 }
@@ -862,7 +953,11 @@
                     })
                 }
 
-                this.GetData(url, doSuccess)
+                function otherConditions() {
+                    this.$Message.error('添加失败');
+                }
+
+                this.GetData(url, doSuccess, otherConditions)
             },
 
             endEditing() {
@@ -880,17 +975,16 @@
 
             ok4() {
                 let _self = this
-                console.log(_self.orderItemList)
-                /* let url = '/order/create'
-                 let _data = {}
-                 _data.companyId = '35931',
-                     _data.payDir = 'payDir',
-                     _data.orderPayNumber = '900',
-                     _data.serviceBeginDate = '2017-02-08 13:22',
-                     _data.GDSreport = 'wbd',
-                     _data.orderitems
+                let url = '/order/create'
+                let _data = {}
+                _data.companyId = _self.formValidate.cpid,
+                    _data.payDir = _self.formValidate.payDir,
+                    _data.orderPayNumber = _self.formValidate.orderPayNumber,
+                    _data.serviceBeginDate = _self.formValidate.serviceBeginDate,
+                    _data.GDSreport = _self.formValidate.GDSreport,
+                    _data.orderitems = JSON.stringify(_self.orderItemList)
 
-                 this.PostData(url, _data)*/
+                this.PostData(url, _data)
             },
 
             updateActions(index) {
@@ -898,6 +992,147 @@
                     index: index,
                     row: {}
                 });
+            },
+
+            // 流程图查询
+            flowChart() {
+                let _self = this
+                if (_self.customerId == '') {
+                    _self.$Message.warning('请选择订单项');
+                } else {
+                    let url = '/dataCenter/activiti/getResourceInputStreamObj?bussinessKey=' + _self.customerId
+
+                    function doSuccess(response) {
+
+                    }
+
+                    this.GetData(url, doSuccess)
+                }
+            },
+
+            cancel(name) {
+                this.iscycle = true
+                this.isfuwu = true
+                this.orderItemList = []
+                $('#orderItemList').datagrid('loadData', {total: 0, rows: []})
+                this.$refs[name].resetFields();
+            },
+
+            getCompany() {
+                let _self = this
+                let url = ''
+                _self.currentPage = 1
+
+                if (_self.isSearch == false) {
+                    url = '/cluesLibrary/loadCompany/1/10/1'
+                } else {
+                    url = '/cluesLibrary/loadCompany/1/10/' + _self.searchCompany
+                }
+
+                _self.selectCompany = true
+
+                function doSuccess(response) {
+                    let _res = response.data.data
+
+                    _self.data4 = []
+                    _self.pageTotal3 = _res.total
+                    for (let i = 0; i < _res.rows.length; i++) {
+                        _self.data4.push({
+                            CompanyName: _res.rows[i].CompanyName,
+                            TEL: _res.rows[i].TEL,
+                            NAME: _res.rows[i].NAME,
+                            cpid: _res.rows[i].cpid,
+                        })
+                    }
+                }
+
+                this.GetData(url, doSuccess)
+            },
+
+            pageChange3(a) {
+                let _self = this
+                let url = ''
+                if (_self.isSearch == false) {
+                    url = '/cluesLibrary/loadCompany/' + a + '/' + _self.pageSize + '/1'
+                } else {
+                    url = '/cluesLibrary/loadCompany/' + a + '/' + _self.pageSize + '/' + _self.searchCompany
+                }
+
+                function doSuccess(response) {
+                    let _res = response.data.data
+
+                    _self.data4 = []
+                    _self.pageTotal3 = _res.total
+                    for (let i = 0; i < _res.rows.length; i++) {
+                        _self.data4.push({
+                            CompanyName: _res.rows[i].CompanyName,
+                            TEL: _res.rows[i].TEL,
+                            NAME: _res.rows[i].NAME,
+                            cpid: _res.rows[i].cpid,
+                        })
+                    }
+                }
+
+                this.GetData(url, doSuccess)
+            },
+
+            // 改变每页显示的数据条数
+            pageSizeChange3(a) {
+                let _self = this
+                let url = ''
+                _self.pageSize = a
+
+                if (_self.isSearch == false) {
+                    url = '/cluesLibrary/loadCompany/1/' + _self.pageSize + '/1'
+                } else {
+                    url = '/cluesLibrary/loadCompany/1/' + _self.pageSize + '/' + _self.searchCompany
+                }
+
+                function doSuccess(response) {
+                    let _res = response.data.data
+
+                    _self.data4 = []
+                    _self.pageTotal3 = _res.total
+                    for (let i = 0; i < _res.rows.length; i++) {
+                        _self.data4.push({
+                            CompanyName: _res.rows[i].CompanyName,
+                            TEL: _res.rows[i].TEL,
+                            NAME: _res.rows[i].NAME,
+                            cpid: _res.rows[i].cpid,
+                        })
+                    }
+                }
+
+                this.GetData(url, doSuccess)
+            },
+
+            searchCompanyData() {
+                let _self = this
+
+                if (_self.searchCompany != '') {
+                    _self.isSearch = true
+                    _self.getCompany()
+                } else {
+                    _self.isSearch = false
+                    _self.getCompany()
+                }
+            },
+
+            keyDown(e) {
+                let _self = this
+
+                if (e.code == 'Enter') {
+                    _self.searchCompanyData()
+                }
+            },
+
+            rowSelect(a) {
+                let _self = this
+
+                _self.selectCompany = false
+                _self.formValidate.cpid = a.cpid
+                _self.formValidate.NAME = a.NAME
+                _self.formValidate.CompanyName = a.CompanyName
             }
         },
         mounted() {
