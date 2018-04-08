@@ -2,17 +2,20 @@
     <div>
         <Card>
             <Row>
+                <!-- 搜索栏 -->
+            </Row>
+            <Row>
                 <ButtonGroup>
-                    <Button type="primary" icon="plus" @click="isAddChange">录入</Button>
-                    <Button type="primary" icon="edit" @click="isEditChange">编辑</Button>
+                    <Button type="primary" icon="plus" @click="AddChange">录入</Button>
+                    <Button type="primary" icon="edit" @click="EditChange">编辑</Button>
                     <Button type="primary" icon="ios-crop">查看</Button>
                     <Button type="primary" icon="ios-color-filter-outline">导入Excel</Button>
                     <Button type="primary" icon="ios-color-filter-outline">记账</Button>
-                    <Button type="primary" icon="ios-color-filter-outline">扫码图片</Button>
+                    <Button type="primary" icon="ios-color-filter-outline" @click="QR_code=true">扫码图片</Button>
                     <Button type="primary" icon="ios-color-filter-outline">交接资料详情</Button>
                     <Button type="primary" icon="ios-color-filter-outline">导出Excel</Button> 
                 </ButtonGroup>
-                <!-- <Poptip
+                <!-- <Poptip> // 弹出框
                         style="float: right"
                         placement="bottom-end"
                         @on-popper-show="isSearch(true)"
@@ -111,7 +114,8 @@
                         :columns="tableHeader"
                         :data="data"
                         @on-current-change="selectRow"
-                        @on-row-click="current_row"></Table>
+                        @on-row-click="current_row">
+                </Table>
                 <Page
                         size="small"
                         :total="pageTotal"
@@ -121,30 +125,34 @@
                         show-elevator
                         @on-change="pageChange"
                         @on-page-size-change="pageSizeChange"
-                        style="margin-top: 10px"></Page>
+                        style="margin-top: 10px">
+                </Page>
             </Row>
         </Card>
+        <Eidt :modal = "create_company"></Eidt>
+        <Modal 
+            v-model = "create_company"
+            title = "录入"
+            @on-ok = "ok"
+            @on-cancel = "cancel"
+        >
+            <Edit></Edit>
+        </Modal>
         <Modal
-                v-model="modal1"
-                title="查看二维码"
-                @on-ok="ok"
+                v-model = "edit"
+                title = "编辑"
+                @on-ok = "ok"
+                @on-cancel = "cancel">
+                <Edit></Edit>
+        </Modal>
+        <Modal
+                v-model = "QR_code"
+                title = "查看二维码"
+                @on-ok = "ok"
                 @on-cancel="cancel">
             <center>
                 <div id="qrcode"></div>
             </center>
-        </Modal>
-        <Modal v-model="modal2" width="360">
-            <p slot="header" style="color:#f60;text-align:center">
-                <Icon type="information-circled"></Icon>
-                <span>删除客户</span>
-            </p>
-            <div style="text-align:center">
-                <p>客户信息删除无法恢复</p>
-                <p>确定删除吗？</p>
-            </div>
-            <div slot="footer">
-                <Button type="error" size="large" long :loading="modal_loading" @click="deleteCustomer2">删除</Button>
-            </div>
         </Modal>
     </div>
 </template>
@@ -152,14 +160,16 @@
 <script>
     import QRCode from 'qrcodejs2'
     import Bus from '../../../components/bus'
+    import Edit from './edit.vue'
 
     export default {
         data() {
             return {
                 ishandleSubmit: false,
                 issearch: false,
-                modal1: false,
-                modal2: false,
+                QR_code: false,
+                create_company: false,
+                edit: false,
                 modal_loading: false,
                 AutoCompletedata: [],
                 customertypeValue: [],
@@ -258,16 +268,25 @@
                 tel: '',
                 customersource: '',
 
-                select:{}
+                current_select:[]
             }
         },
         methods: {
-
-            //记录当前被点击的行
-            current_row(e){
-                this.select = Object.assign({}, e)
-                console.log(this.select)
+            //  录入
+            AddChange(){
+                this.create_company = true
             },
+            //  编辑
+            EditChange(){
+                this.edit = true
+            },
+
+            //  记录当前被点击的行
+            current_row(e){
+                console.log(e.customerId)
+                
+            },
+
             ok(){
 
             },
@@ -728,6 +747,9 @@
                 this.getTableData()
                 this.currentPage = 1
             })
+        },
+        components:{
+            Edit
         }
     }
 </script>

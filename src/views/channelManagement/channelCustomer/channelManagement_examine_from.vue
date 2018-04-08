@@ -54,8 +54,6 @@
                 <FormItem label="更新时间" prop="updatedate">
                     <Input disabled size="small" v-model="formValidate.updatedate"/>
                 </FormItem>
-                <FormItem label="更新人" prop="gxr">
-                    <Input disabled size="small" v-model="formValidate.gxr"/>
                 </FormItem>
                 <FormItem label="服务梯队" prop="backup">
                     <Input size="small" type="textarea" v-model="formValidate.backup" disabled/>
