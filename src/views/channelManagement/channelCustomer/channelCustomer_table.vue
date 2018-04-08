@@ -493,6 +493,7 @@
                             customer_id: _data.rows[i].customer_id,
                             updatedate: _data.rows[i].updatedate,
                             createby: _data.rows[i].createby,
+                            customer_mobile_phone:_data.rows[i].customer_mobile_phone,
                             people: [
                                 {
                                     customer_mobile_phone: _data.rows[i].customer_mobile_phone,
