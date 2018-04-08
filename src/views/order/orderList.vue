@@ -255,6 +255,14 @@
                 </Row>
             </Form>
         </Modal>
+        <Modal
+                v-model="flowChart2"
+                title="查看流程图"
+                width="70%">
+            <center>
+                <img :src='flowChartImg'/>
+            </center>
+        </Modal>
         <Card>
             <Row>
                 <ButtonGroup>
@@ -262,6 +270,7 @@
                     <Button type="primary" icon="edit" @click="isEditChange">编辑</Button>
                     <Button type="primary" icon="ios-crop" @click="detailCustomers()">查看</Button>
                     <Button type="primary" icon="ios-crop" @click="flowChart()">查看流程图</Button>
+                    <Button type="primary" icon="ios-crop" @click="toDoWorkFlow()">办理审批</Button>
                     <Button type="primary" icon="ios-color-filter-outline">修改</Button>
                     <Button type="primary" icon="ios-color-filter-outline">企划(修改)</Button>
                     <Button type="primary" icon="ios-color-filter-outline" @click="deleteOrder = true">订单作废</Button>
@@ -319,6 +328,22 @@
                     @on-page-size-change="pageSizeChange3"
                     style="margin-top: 10px"></Page>
         </Modal>
+        <Modal
+                v-model="shenpi"
+                title="办理审批"
+                @on-ok="blsp">
+            <Form ref="banlishenpi" :model="banlishenpi" :label-width="90">
+                <FormItem label="审批备注" prop="desc">
+                    <Input v-model="banlishenpi.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+                </FormItem>
+                <FormItem label="是否同意审批" prop="agree">
+                    <RadioGroup v-model="banlishenpi.agree">
+                        <Radio label="1">同意</Radio>
+                        <Radio label="0">驳回</Radio>
+                    </RadioGroup>
+                </FormItem>
+            </Form>
+        </Modal>
     </div>
 </template>
 
@@ -343,6 +368,9 @@
                 iscycle: false,
                 isfuwu: false,
                 selectCompany: false,
+                flowChart2: false,
+                shenpi: false,
+                flowChartImg: '',
                 itemGrid: '',
                 customerId: '',
                 productId: '',
@@ -359,6 +387,10 @@
                 price: '',
                 SKU: '',
                 lastObj: {},
+                banlishenpi: {
+                    desc: '',
+                    agree: ''
+                },
                 formValidate: {
                     zongjia: 0,
                     orderPayNumber: 0,
@@ -1000,13 +1032,8 @@
                 if (_self.customerId == '') {
                     _self.$Message.warning('请选择订单项');
                 } else {
-                    let url = '/dataCenter/activiti/getResourceInputStreamObj?bussinessKey=' + _self.customerId
-
-                    function doSuccess(response) {
-
-                    }
-
-                    this.GetData(url, doSuccess)
+                    _self.flowChart2 = true
+                    _self.flowChartImg = '/api/dataCenter/activiti/getResourceInputStreamObj?bussinessKey=' + this.customerId
                 }
             },
 
@@ -1133,6 +1160,26 @@
                 _self.formValidate.cpid = a.cpid
                 _self.formValidate.NAME = a.NAME
                 _self.formValidate.CompanyName = a.CompanyName
+            },
+
+            toDoWorkFlow() {
+                let _self = this
+                if (_self.customerId == '') {
+                    _self.$Message.warning('请选择订单项');
+                } else {
+                    _self.shenpi = true
+                }
+            },
+
+            blsp() {
+                let _self = this
+                let url = '/activiti/toDoWorkFlowByBid?bId=' + _self.customerId + '&bType=10&auditFlag=' + _self.banlishenpi.agree + '&auditMemo=' + _self.banlishenpi.desc
+
+                function doSuccess() {
+
+                }
+
+                this.GetData(url, doSuccess)
             }
         },
         mounted() {

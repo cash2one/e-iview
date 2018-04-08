@@ -35,8 +35,8 @@
             <file leaf-file-name="cluesLibrary_table.vue" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/src/views/cluesLibrary/cluesLibraryTable/cluesLibrary_table.vue">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="508">
-                    <caret line="788" column="12" lean-forward="true" selection-start-line="788" selection-start-column="12" selection-end-line="794" selection-end-column="13" />
+                  <state relative-caret-position="657">
+                    <caret line="796" column="8" lean-forward="true" selection-start-line="796" selection-start-column="8" selection-end-line="798" selection-end-column="9" />
                     <folding />
                   </state>
                 </provider>
@@ -55,11 +55,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="orderApprove.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/views/order/orderApprove.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="471">
+              <caret line="121" column="43" lean-forward="false" selection-start-line="121" selection-start-column="43" selection-end-line="121" selection-end-column="43" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="orderList.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/views/order/orderList.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="977" column="41" lean-forward="true" selection-start-line="977" selection-start-column="41" selection-end-line="977" selection-end-column="41" />
+            <state relative-caret-position="221">
+              <caret line="1123" column="42" lean-forward="true" selection-start-line="1123" selection-start-column="42" selection-end-line="1123" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -69,15 +79,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>item</find>
-      <find>items</find>
-      <find>pinglun</find>
-      <find>send</find>
-      <find>formInline</find>
-      <find>openEdi</find>
-      <find>formDynamic</find>
-      <find>status</find>
-      <find>getAllTSTypeGroups</find>
       <find>selectRow</find>
       <find>customerId</find>
       <find>orderAddProducts</find>
@@ -97,8 +98,17 @@
       <find>addProduct</find>
       <find>formValidate</find>
       <find>rowSelect</find>
-      <find>ok4</find>
       <find>getLabelData</find>
+      <find>查看二维码</find>
+      <find>ok4</find>
+      <find>getQRcode</find>
+      <find>modal1</find>
+      <find>flowChart</find>
+      <find>img</find>
+      <find>&lt;img</find>
+      <find>flowChart2</find>
+      <find>qrcode</find>
+      <find>banlishenpi</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -108,6 +118,7 @@
         <option value="$PROJECT_DIR$/src/styles/component.css" />
         <option value="$PROJECT_DIR$/src/views/customerManagement/customerManagement.vue" />
         <option value="$PROJECT_DIR$/src/views/login.vue" />
+        <option value="$PROJECT_DIR$/src/views/order/orderApprove.vue" />
         <option value="$PROJECT_DIR$/src/views/order/orderList.vue" />
       </list>
     </option>
@@ -173,6 +184,13 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
               <item name="channelManagement" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="iview-admin-dev" type="b2602c69:ProjectViewProjectNode" />
+              <item name="iview-admin-dev" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="order" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -250,17 +268,18 @@
       <workItem from="1515030783734" duration="24568000" />
       <workItem from="1515113830651" duration="24869000" />
       <workItem from="1515374609690" duration="3700000" />
-      <workItem from="1523150704773" duration="12624000" />
+      <workItem from="1523150704773" duration="23400000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65761000" />
+    <option name="totallyTimeSpent" value="76537000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18675596" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18675596" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="调试" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -270,6 +289,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20877193" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="找到" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -364,14 +384,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/customerManagement/marketingManagement/customerManagement_table.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="283" column="73" lean-forward="true" selection-start-line="283" selection-start-column="73" selection-end-line="283" selection-end-column="73" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="616">
@@ -379,14 +391,6 @@
           <folding>
             <element signature="e#0#22#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/cluesLibrary/cluesLibraryTable/cluesLibrary_table.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="788" column="12" lean-forward="true" selection-start-line="788" selection-start-column="12" selection-end-line="794" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -398,10 +402,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/customerManagement/marketingManagement/customerManagement_table.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="464" column="20" lean-forward="true" selection-start-line="464" selection-start-column="20" selection-end-line="464" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/cluesLibrary/cluesLibraryTable/cluesLibrary_table.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="657">
+          <caret line="796" column="8" lean-forward="true" selection-start-line="796" selection-start-column="8" selection-end-line="798" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/order/orderApprove.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="121" column="43" lean-forward="false" selection-start-line="121" selection-start-column="43" selection-end-line="121" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/views/order/orderList.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="977" column="41" lean-forward="true" selection-start-line="977" selection-start-column="41" selection-end-line="977" selection-end-column="41" />
+        <state relative-caret-position="221">
+          <caret line="1123" column="42" lean-forward="true" selection-start-line="1123" selection-start-column="42" selection-end-line="1123" selection-end-column="42" />
           <folding />
         </state>
       </provider>
