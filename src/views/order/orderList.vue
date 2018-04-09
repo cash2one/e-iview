@@ -14,7 +14,8 @@
                 v-model="orderAdd"
                 title="录入"
                 :width="1300"
-                @on-ok="ok4"
+                :loading="loading"
+                @on-ok="ok4('formValidate')"
                 @on-cancel="cancel('formValidate')">
             <Form ref="formValidate" :rules="ruleValidate" :model="formValidate" :label-width="90">
                 <Row :gutter="16">
@@ -88,14 +89,14 @@
                 </Row>
                 <Row :gutter="16">
                     <Col span="8">
-                    <FormItem label="服务开始月份" prop="serviceBeginDate" v-if="isfuwu">
+                    <FormItem label="服务开始月份" prop="serviceBeginDate">
                         <DatePicker format="yyyy-MM-dd" type="date" style="width: 200px"
                                     v-model="formValidate.serviceBeginDate"></DatePicker>
                     </FormItem>
                     </Col>
                     <Col span="8">
-                    <FormItem label="国地税报道" prop="GDSreport" v-if="iscycle">
-                        <Select v-model="formValidate.GDSreport">
+                    <FormItem label="国地税报道" prop="GDSreport">
+                        <Select v-model="formValidate.GDSreport" :disabled="iscycle">
                             <Option value="ybd">已报道</Option>
                             <Option value="wbd">未报道</Option>
                             <Option value="bybd">不用报道</Option>
@@ -104,8 +105,10 @@
                     </Col>
                 </Row>
                 <Row :gutter="16">
-                    <FormItem label="选择产品" prop="customername">
+                    <FormItem label="选择产品">
                         <Button type="primary" icon="plus" @click="orderAddProducts()">新增</Button>
+                        <Button type="primary" icon="plus" @click="removeRows()">删除</Button>
+                        <Button type="primary" icon="plus" @click="kuaiji()" v-if="kjdj">查看会计到家服务项</Button>
                     </FormItem>
                 </Row>
                 <table width="100%" id="orderItemList"></table>
@@ -127,6 +130,15 @@
                             :columns="productColumns"
                             :data="productData">
                     </Table>
+                    <Page
+                            size="small"
+                            :total="pageTotal2"
+                            show-total
+                            show-sizer
+                            show-elevator
+                            @on-change="pageChange2"
+                            @on-page-size-change="pageSizeChange2"
+                            style="margin-top: 10px"></Page>
                 </Card>
                 </Col>
                 <Col span="11" offset="1">
@@ -271,6 +283,7 @@
                     <Button type="primary" icon="ios-crop" @click="detailCustomers()">查看</Button>
                     <Button type="primary" icon="ios-crop" @click="flowChart()">查看流程图</Button>
                     <Button type="primary" icon="ios-crop" @click="toDoWorkFlow()">办理审批</Button>
+                    <Button type="primary" icon="ios-crop" @click="reApplyProcess()">重新提交</Button>
                     <Button type="primary" icon="ios-color-filter-outline">修改</Button>
                     <Button type="primary" icon="ios-color-filter-outline">企划(修改)</Button>
                     <Button type="primary" icon="ios-color-filter-outline" @click="deleteOrder = true">订单作废</Button>
@@ -344,6 +357,26 @@
                 </FormItem>
             </Form>
         </Modal>
+        <Modal
+                v-model="cxtj"
+                title="重新提交"
+                @on-ok="tijiao">
+            <Form ref="cxtijiao" :model="cxtijiao" :label-width="90">
+                <FormItem label="是否同意审批" prop="agree">
+                    <RadioGroup v-model="cxtijiao.agree">
+                        <Radio label="1">提交</Radio>
+                        <Radio label="0">拒绝</Radio>
+                    </RadioGroup>
+                </FormItem>
+            </Form>
+        </Modal>
+        <Modal
+                v-model="fuwux"
+                title="服务项"
+                width="50%"
+                @on-ok="fwxtj">
+            <div id="tt"></div>
+        </Modal>
     </div>
 </template>
 
@@ -360,21 +393,26 @@
     export default {
         data() {
             return {
+                loading: true,
                 orderAdd: false,
                 deleteOrder: false,
                 detailCustomer: false,
                 orderAddProduct: false,
                 isProductDetail: false,
-                iscycle: false,
+                fuwux: false,
+                iscycle: true,
                 isfuwu: false,
+                kjdj: false,
                 selectCompany: false,
                 flowChart2: false,
                 shenpi: false,
+                cxtj: false,
                 flowChartImg: '',
                 itemGrid: '',
                 customerId: '',
                 productId: '',
                 pageTotal: '',
+                pageTotal2: '',
                 pageTotal3: '',
                 pageSize: 10,
                 data3: [],
@@ -391,17 +429,34 @@
                     desc: '',
                     agree: ''
                 },
+                cxtijiao: {
+                    agree: ''
+                },
                 formValidate: {
                     zongjia: 0,
-                    orderPayNumber: 0,
+                    orderPayNumber: '',
+                    CompanyName: '',
                     customername: '',
                     GDSreport: '',
                     payDir: '',
                     date: new Date(),
-                    serviceBeginDate: new Date()
+                    serviceBeginDate: ''
                 },
                 formValidateDetail: {},
-                ruleValidate: {},
+                ruleValidate: {
+                    CompanyName: [
+                        { required: true, message: '请选择公司', trigger: 'change' }
+                    ],
+                    NAME: [
+                        { required: true, message: '请选择客户', trigger: 'change' }
+                    ],
+                    payDir: [
+                        { required: true, message: '请选择缴费渠道', trigger: 'change' }
+                    ],
+                    orderPayNumber: [
+                        { required: true, message: '请填写已付款金额', trigger: 'blur' }
+                    ],
+                },
                 columns44: [
                     {
                         type: 'index',
@@ -420,11 +475,19 @@
                         title: '客户电话',
                         key: 'TEL'
                     },
+                    {
+                        title: '钱包余额',
+                        key: 'balance'
+                    },
+                    {
+                        title: '是否国地税报道',
+                        key: 'gdsreport'
+                    },
                 ],
                 columns2: [
                     {
                         title: '订单号码',
-                        key: 'baseorderid',
+                        key: 'id',
                         width: 120
                     },
                     {
@@ -567,8 +630,8 @@
 
             // 改变页码
             pageChange(a) {
-                var _self = this
-                var url = '/api/order/list?page=' + a + '&pageSize=' + _self.pageSize
+                let _self = this
+                let url = '/api/order/list?page=' + a + '&pageSize=' + _self.pageSize
                 this.$http.get(url)
                     .then(function (response) {
                         let _data = response.data.data
@@ -596,7 +659,7 @@
 
             // 改变每页显示的数据条数
             pageSizeChange(a) {
-                var _self = this
+                let _self = this
                 _self.pageSize = a
                 _self.data3 = []
                 this.$http.get('/api/order/list?page=1&pageSize=' + a)
@@ -655,6 +718,7 @@
 
                 function doSuccess(response) {
                     let _data = response.data.data
+                    _self.pageTotal2 = _data.total
                     _self.productData = []
 
                     for (let i = 0; i < _data.rows.length; i++) {
@@ -683,6 +747,76 @@
                 }
 
                 this.GetData(url, doSuccess)
+            },
+
+            pageChange2(a) {
+                let _self = this
+                let url = '/api/product/list?page=' + a + '&pageSize=' + _self.pageSize
+                this.$http.get(url)
+                    .then(function (response) {
+                        let _data = response.data.data
+                        _self.pageTotal2 = _data.total
+                        _self.productData = []
+
+                        for (let i = 0; i < _data.rows.length; i++) {
+                            _self.productData.push({
+                                id: _data.rows[i].id,
+                                product: _data.rows[i].product,
+                                productCode: _data.rows[i].productCode,
+                                status: _data.rows[i].status,
+                                baseproductId: _data.rows[i].baseproductId,
+                                createDate: _data.rows[i].createDate,
+                                createOperid: _data.rows[i].createOperid,
+                                createby: _data.rows[i].createby,
+                                defaultdepartalias: _data.rows[i].defaultdepartalias,
+                                departalias: _data.rows[i].departalias,
+                                iscycle: _data.rows[i].iscycle,
+                                linkProductids: _data.rows[i].linkProductids,
+                                ordernumber: _data.rows[i].ordernumber,
+                                pId: _data.rows[i].pId,
+                                pSortId: _data.rows[i].pSortId,
+                                productLevel: _data.rows[i].productLevel,
+                                productTypeID: _data.rows[i].productTypeID,
+                                producttags: _data.rows[i].producttags,
+                                rootorgcode: _data.rows[i].rootorgcode,
+                            })
+                        }
+                    })
+            },
+
+            pageSizeChange2(a) {
+                let _self = this
+                _self.pageSize = a
+                this.$http.get('/api/product/list?page=1&pageSize=' + a)
+                    .then(function (response) {
+                        let _data = response.data.data
+                        _self.pageTotal2 = _data.total
+                        _self.productData = []
+
+                        for (let i = 0; i < _data.rows.length; i++) {
+                            _self.productData.push({
+                                id: _data.rows[i].id,
+                                product: _data.rows[i].product,
+                                productCode: _data.rows[i].productCode,
+                                status: _data.rows[i].status,
+                                baseproductId: _data.rows[i].baseproductId,
+                                createDate: _data.rows[i].createDate,
+                                createOperid: _data.rows[i].createOperid,
+                                createby: _data.rows[i].createby,
+                                defaultdepartalias: _data.rows[i].defaultdepartalias,
+                                departalias: _data.rows[i].departalias,
+                                iscycle: _data.rows[i].iscycle,
+                                linkProductids: _data.rows[i].linkProductids,
+                                ordernumber: _data.rows[i].ordernumber,
+                                pId: _data.rows[i].pId,
+                                pSortId: _data.rows[i].pSortId,
+                                productLevel: _data.rows[i].productLevel,
+                                productTypeID: _data.rows[i].productTypeID,
+                                producttags: _data.rows[i].producttags,
+                                rootorgcode: _data.rows[i].rootorgcode,
+                            })
+                        }
+                    })
             },
 
             selectRow2(a) {
@@ -791,8 +925,8 @@
 
                     function doSuccess(response) {
                         if (response.data.data) {
-                            var baseprice = response.data.data[0].baseprice
-                            var oaprice = response.data.data[0].oaprice
+                            let baseprice = response.data.data[0].baseprice
+                            let oaprice = response.data.data[0].oaprice
                             _self.price = oaprice
                             $("#product_price").html(oaprice)
                         } else {
@@ -858,9 +992,11 @@
                     _self.$Message.success('添加成功')
                     _self.orderItemList.push(response.data.data[0])
                     let _department = JSON.parse(response.data.data[0].servicedeparts)
-                    if (response.data.data[0].iscycle != 'N') {
-                        _self.iscycle = true
+                    if (response.data.data[0].iscycle != 'N' && response.data.data[0].product != '会计到家') {
+                        _self.iscycle = false
+                    } else if (response.data.data[0].product == '会计到家') {
                         _self.isfuwu = true
+                        _self.kjdj = true
                     }
                     for (let i = 0; i < _self.orderItemList.length; i++) {
                         _self.formValidate.zongjia += Number(_self.orderItemList[i].paynumber)
@@ -912,10 +1048,10 @@
                                 },
                                 formatter: function (value, rec, index) {
                                     if (value == undefined) return '';
-                                    var valArray = value.split(',');
+                                    let valArray = value.split(',');
                                     if (valArray.length > 1) {
-                                        var checkboxValue = '';
-                                        for (var k = 0; k < valArray.length; k++) {
+                                        let checkboxValue = '';
+                                        for (let k = 0; k < valArray.length; k++) {
                                             if (valArray[k] == 'Y') {
                                                 checkboxValue = checkboxValue + '是' + ',';
                                             }
@@ -939,15 +1075,22 @@
                                 field: 'departname',
                                 title: '服务部门',
                                 width: 140,
+                                editor: 'text',
+                                formatter: function (value, rec, index) {
+                                    return _self.departnamef(value, rec, index);
+                                }
+/*                                formatter:function(value,row){
+                                    return row.departname;
+                                },
                                 editor: {
                                     type: 'combobox',
                                     options: {
                                         valueField: 'type',
                                         textField: 'text',
                                         data: _department,
-                                        required: true
+                                        required: true,
                                     }
-                                }
+                                }*/
                             }, {field: 'departid', title: '服务部门id', hidden: true}, {
                                 field: 'servicedeparts',
                                 title: '服务部门id',
@@ -969,6 +1112,7 @@
                             _self.updateActions(index);
                         },
                         onClickRow: function (index, row) {
+                            _self.itemOnClick(index)
                             if (editIndex != index) {
                                 if (_self.endEditing()) {
                                     $('#orderItemList').datagrid('selectRow', index).datagrid('beginEdit', index);
@@ -1005,18 +1149,68 @@
                 }
             },
 
-            ok4() {
+            ok4(name) {
                 let _self = this
-                let url = '/order/create'
-                let _data = {}
-                _data.companyId = _self.formValidate.cpid,
-                    _data.payDir = _self.formValidate.payDir,
-                    _data.orderPayNumber = _self.formValidate.orderPayNumber,
-                    _data.serviceBeginDate = _self.formValidate.serviceBeginDate,
-                    _data.GDSreport = _self.formValidate.GDSreport,
-                    _data.orderitems = JSON.stringify(_self.orderItemList)
 
-                this.PostData(url, _data)
+                setTimeout(() => {
+                    this.loading = false;
+                    this.$refs[name].validate((valid) => {
+                        if (valid) {
+                            if (_self.iscycle == false && _self.formValidate.GDSreport == '') {
+                                _self.$nextTick(() => {
+                                    _self.loading = true;
+                                });
+                                _self.$Message.error('您选择了代理记账产品，请选择是否国地税报道');
+                            } else if (_self.iscycle == false && _self.formValidate.serviceBeginDate == '') {
+                                _self.$nextTick(() => {
+                                    _self.loading = true;
+                                });
+                                _self.$Message.error('您选择了代理记账产品，请选择服务开始时间');
+                            } else if (_self.isfuwu == true && _self.formValidate.serviceBeginDate == '') {
+                                _self.$nextTick(() => {
+                                    _self.loading = true;
+                                });
+                                _self.$Message.error('您选择了会计到家产品，请选择服务开始时间');
+                            } else if (_self.orderItemList.length == 0) {
+                                _self.$nextTick(() => {
+                                    _self.loading = true;
+                                });
+                                _self.$Message.error('请选择产品');
+                            } else {
+                                let url = '/order/create'
+                                let _data = {}
+                                _data.companyId = _self.formValidate.cpid,
+                                    _data.payDir = _self.formValidate.payDir,
+                                    _data.orderPayNumber = _self.formValidate.orderPayNumber,
+                                    _data.serviceBeginDate = _self.formValidate.serviceBeginDate,
+                                    _data.GDSreport = _self.formValidate.GDSreport,
+                                    _data.orderitems = JSON.stringify(_self.orderItemList)
+
+                                function doSuccess(response) {
+                                    _self.$Message.success('新增成功!')
+                                    _self.orderItemList = []
+                                    _self.orderAdd = false
+                                    _self.cancel('formValidate')
+                                    _self.getTableData()
+                                }
+                                function otherConditions() {
+                                    _self.$nextTick(() => {
+                                        _self.loading = true;
+                                    });
+                                    _self.$Message.error('新增失败!');
+                                }
+                                this.PostData(url, _data, doSuccess, otherConditions)
+                            }
+                        } else {
+                            this.$nextTick(() => {
+                                this.loading = true;
+                            });
+                            this.$Message.error('新增失败!');
+                        }
+                    })
+                }, 2000)
+
+              /*  */
             },
 
             updateActions(index) {
@@ -1038,7 +1232,7 @@
             },
 
             cancel(name) {
-                this.iscycle = true
+                this.iscycle = false
                 this.isfuwu = true
                 this.orderItemList = []
                 $('#orderItemList').datagrid('loadData', {total: 0, rows: []})
@@ -1069,6 +1263,8 @@
                             TEL: _res.rows[i].TEL,
                             NAME: _res.rows[i].NAME,
                             cpid: _res.rows[i].cpid,
+                            balance: _res.rows[i].balance,
+                            gdsreport: _res.rows[i].gdsreport,
                         })
                     }
                 }
@@ -1096,6 +1292,8 @@
                             TEL: _res.rows[i].TEL,
                             NAME: _res.rows[i].NAME,
                             cpid: _res.rows[i].cpid,
+                            balance: _res.rows[i].balance,
+                            gdsreport: _res.rows[i].gdsreport,
                         })
                     }
                 }
@@ -1126,6 +1324,8 @@
                             TEL: _res.rows[i].TEL,
                             NAME: _res.rows[i].NAME,
                             cpid: _res.rows[i].cpid,
+                            balance: _res.rows[i].balance,
+                            gdsreport: _res.rows[i].gdsreport,
                         })
                     }
                 }
@@ -1160,6 +1360,16 @@
                 _self.formValidate.cpid = a.cpid
                 _self.formValidate.NAME = a.NAME
                 _self.formValidate.CompanyName = a.CompanyName
+
+                if(a.gdsreport == '未报道') {
+                    _self.formValidate.GDSreport = 'wbd'
+                } else if(a.gdsreport == '已报道') {
+                    _self.formValidate.GDSreport = 'ybd'
+                } else if(a.gdsreport == '不用报道') {
+                    _self.formValidate.GDSreport = 'bybd'
+                } else {
+                    _self.formValidate.GDSreport = ''
+                }
             },
 
             toDoWorkFlow() {
@@ -1180,6 +1390,152 @@
                 }
 
                 this.GetData(url, doSuccess)
+            },
+
+            reApplyProcess() {
+                let _self = this
+                if (_self.customerId == '') {
+                    _self.$Message.warning('请选择订单项');
+                } else {
+                    _self.cxtj = true
+                }
+            },
+
+            tijiao() {
+                let _self = this
+                let url = '/activiti/reApplyProcessByOrderId?orderId=' + _self.customerId + '&auditFlag=' + _self.banlishenpi.agree
+
+                function doSuccess() {
+
+                }
+
+                this.GetData(url, doSuccess)
+            },
+
+            // 删除按钮被点击
+            removeRows() {
+                let _self = this
+                let dd = $("#orderItemList").datagrid("getSelected");
+
+                if (dd == null) {
+                    _self.$Message.warning('请选择要移除的数据');
+                }
+
+                let index = $("#orderItemList").datagrid("getRowIndex", dd);
+                $("#orderItemList").datagrid("deleteRow", index);
+            },
+
+            departnamef(value, row, index) {
+
+                if (row.departid) {
+                    return value;
+                } else {
+                    var servicedeparts = eval(row.servicedeparts) == null ? []
+                        : eval(row.servicedeparts);
+
+                    for (var i = 0; i < servicedeparts.length; i++) {
+
+                        if (servicedeparts[i]["departId"]
+                            && servicedeparts[i]["departId"] == value) {
+                            return servicedeparts[i]["departName"];
+                        }
+
+                    }
+                }
+
+
+            },
+
+            itemOnClick(index) {
+                let _self = this
+                let itemGrid = $("#orderItemList")
+                itemGrid.datagrid('selectRow', index).datagrid("endEdit", index);
+                itemGrid.datagrid('selectRow', index).datagrid("beginEdit", index);
+                var editors = itemGrid.datagrid("getEditors", index);
+                var targetObjs = {};
+                var row = itemGrid.datagrid("getSelected");
+
+                for (var i = 0; i < editors.length; i++) {
+
+                    if ("departname" == editors[i].field) {
+
+                        targetObjs.departname = editors[i].target;
+
+                    }
+
+                }
+
+                var d = eval(row.servicedeparts) == null ? [] : eval(row.servicedeparts);
+                targetObjs.departname.combobox({
+                    data: d,
+                    valueField: 'type',
+                    textField: 'text',
+                    onSelect: function (re) {
+
+                        targetObjs.departname.combobox("destroy");
+                        itemGrid.datagrid('updateRow', {
+                            index: index,
+                            row: {
+                                departname: re.text,
+                                departid: re.type
+                            }
+                        });
+                        if (editIndex != null) {
+                            _self.itemOnClick(editIndex);
+                        }
+                    }
+                })
+            },
+
+            kuaiji() {
+                let _self = this
+
+                if (_self.formValidate.CompanyName == '') {
+                    _self.$Message.warning('请先选择归属公司');
+                } else {
+                    let url = '/system/serviceContract/template/queryTreegridByCode?templateCode=kjdafwxy&objectId=' + _self.formValidate.cpid
+                    _self.fuwux = true
+
+                    function doSuccess(response) {
+                        $('#tt').treegrid({
+                            data: response.data.data.treeData,
+                            idField : 'id',
+                            treeField : 'typeName',
+                            singleSelect: false,
+                            checkOnSelect: true,
+                            width : 600,
+                            rownumbers:true,
+                            toolbar : [],
+                            lines : true,
+//                            onLoadSuccess:loadSuccess,
+                            columns : [ [
+                                {
+                                    field: "ck",
+                                    checkbox: "true"
+                                },
+                                {
+                                field : 'id',
+                                title : '产品类型id',
+                                align : 'right',
+                                hidden : true
+                            } ,{
+                                field : 'p.id',
+                                title : '父Id',
+                                align : 'right',
+                                hidden : true
+                            }, {
+                                field : 'typeName',
+                                title : '类型名称',
+                            },{
+                                field : 'sort',
+                                title : '排序'
+                            } ] ]
+                        });
+
+                    }
+
+                    this.GetData(url, doSuccess)
+                }
             }
         },
         mounted() {
