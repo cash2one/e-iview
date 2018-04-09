@@ -137,18 +137,18 @@ export const appRouter = [
         ]
     },
     {
-        path: '/test',
+        path: '/companyManagement',
         icon: 'social-windows',
         name: 'companyManagement',
         title: '企业管理',
         component:Main,
         children:[
             {
-                path: 'test',
+                path: 'companyManagement',
                 title: '企业管理',
-                name: 'test',
+                name: 'companyManagement_index',
                 component: resolve =>{
-                    require(['@/views/test/App.vue'],resolve)
+                    require(['@/views/companyManagement/components/main.vue'],resolve)
                 }
             }
         ]

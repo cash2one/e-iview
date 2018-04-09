@@ -1,9 +1,7 @@
 <template>
   <div>
-    <ButtonGroups style="margin:10px">
       <Button style="margin-right:10px">添加</Button>
       <Button>删除</Button>
-    </ButtonGroups>
     <Table :columns="header" stripe style="margin:10px"></Table>
     <div style="margin: 10px;overflow: hidden">
         <div style="float:left;">
@@ -19,16 +17,20 @@ export default {
     return{
       header:[
         {
-          title:'变更内容',
+          title:'名称',
           key:'name'
         },
         {
-          title:'备注',
+          title:'手机号',
           key:'add'
         },
         {
-          title:'创建人',
+          title:'备注',
           key:'create'
+        },
+        {
+          title:'创建人',
+          key:'create_date'
         },
         {
           title:'创建时间',

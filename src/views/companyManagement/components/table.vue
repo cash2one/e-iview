@@ -118,6 +118,7 @@
                 this.$http.get(url).then(function(res){
                     _that.tableShowData = res.data.data.rows
                     _that.total_Num = res.data.data.total
+                    window.scrollTo(0,0)
                 }).catch(function(err){
                     console.log(err)
                 })

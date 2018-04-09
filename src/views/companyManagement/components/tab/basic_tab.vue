@@ -128,8 +128,32 @@
 </template>
 
 <script>
+import Bus from '../bus'
 export default {
-  
+  data(){
+    return{
+      id:'',
+      basic_data:[]
+    }
+  },
+  props:['id'],
+  created:function() {
+    Bus.$on('current_data',this.init)
+  },
+  methods:{
+    init(e){
+      this.id = e.cpid
+      console.log(e.cpid)
+      var _that = this
+      var url_basic = "api/company/findCompanyById/" + this.id +"/basic"
+      this.$http.get(url_basic).then(function(res){
+        console.log(res.data.data[0])
+      }).catch(function(err){
+        console.log(err)
+      })
+      // 33021写死
+    }
+  }
 }
 </script>
 

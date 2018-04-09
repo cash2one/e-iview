@@ -1,5 +1,5 @@
 <template>
-  <div style="min-width:900px;padding:20px;background:white">
+  <div style="min-width:900px;padding:20px;background:white;border-radius:5px">
     <row><Button></Button></row>
     <row><Tableshow></Tableshow></row>
   </div>

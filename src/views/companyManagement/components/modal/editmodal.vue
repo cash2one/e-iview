@@ -3,7 +3,7 @@
       <modal
             v-model="show"
             title="新增"
-            width="70"
+            width="800"
         >
             <Form :model="c_com" :label-width="120" ref="c_com">
                 <Row>

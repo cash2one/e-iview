@@ -7,7 +7,7 @@
         >
         <Tabs type="card">
           <TabPane label="基本信息">
-            <BasicTab></BasicTab>
+            <BasicTab :id="companyId"></BasicTab>
           </TabPane>
           <TabPane label="主体信息">标签二的内容</TabPane>
           <TabPane label="工    单">标签三的内容</TabPane>
@@ -51,21 +51,12 @@ export default {
       this.show = true
     })
     Bus.$on('current_data',this.save)
-    this.init()
   },
   methods:{
     save(e){
       this.show_data = e
       this.companyId = e.cpid
       // 33021写死
-    },
-    init(){
-      var _that = this
-      this.$http.get().then(function(res){
-        
-      }).catch(function(err){
-        console.log(err)
-      })
     }
   },
   components:{

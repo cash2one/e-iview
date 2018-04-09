@@ -3,7 +3,7 @@
       <Modal
             v-model="show"
             title="新增"
-            width="70"
+            width="800"
             >
             <Form :model="c_com" :rules="c_comInline" :label-width="120" ref="c_com">
                 <Row>
@@ -207,7 +207,7 @@ export default {
     method:{
         ok(){},
         cancel(){},
-        handleUpload (file) {
+        handleUpload(file){
                 this.file = file;
                 return false;
             },
