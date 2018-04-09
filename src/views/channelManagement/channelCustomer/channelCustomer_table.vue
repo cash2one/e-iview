@@ -84,7 +84,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="客户等级" prop="customerLevel">
                         <Select v-model="formValidate.customerLevel" size="small">
@@ -95,7 +95,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <FormItem label="标签" prop="customerTags">
+                <FormItem label="标签" prop="customerTags" style="height:56px">
                     <Tag v-for="item in customerlabelGroup" :key="item" :name="item" :id="item.id" closable
                          @on-close="handleClose2">
                         {{ item.labelName }}
@@ -363,6 +363,7 @@
 
                 function doSuccess(response) {
                     let _data = response.data.data
+                    console.log(_data)
 
 //                    _self.searchTypegroup('customerType')
                     _self.pageTotal = Number(_data.total)
@@ -415,7 +416,6 @@
 
                 function doSuccess(response) {
                     let _data = response.data.data
-                    console.log(_data)
 //                    _self.searchTypegroup('customerType')
                     _self.pageTotal = _data.total
 
@@ -452,7 +452,6 @@
                             ]
                         })                       
                     }
-                    console.log(_self.data2)
                 }
 
                 this.GetData(url, doSuccess)
@@ -585,8 +584,6 @@
             },
             examine(e) {
                 this.$emit('isExamine', e.row.customer_id)
-                console.log(e)
-                console.log(e.row.customer_id)
             },
             // 表格行选中事件
             selectRow(a) {
@@ -595,9 +592,8 @@
             },
             handleSubmit(name) {
                 let _self = this
-
                 setTimeout(() => {
-                        this.loading = false;
+                    this.loading = false;
                     this.$refs[name].validate((valid) => {
                         if (valid) {
                             if (_self.customerlabelGroup != undefined) {
@@ -615,9 +611,10 @@
                                 });
                                 this.$Message.error('电话、固话、QQ、微信必须填写一个');
                             } else {
+                                _self.loading = true
                                 this.$http({
                                     method: 'post',
-                                    url: '/api/channel/customer/channel/create',
+                                    url: 'api/channel/customer/channel/create',
                                     data: _self.formValidate,
                                 })
                                     .then(function (response) {
@@ -626,7 +623,6 @@
                                             _self.cancel('formValidate')
                                             _self.getData()
                                             _self.modal_add = false
-                                            console.log(_self.modal_add)
                                         }
                                     })
                             }
@@ -694,6 +690,7 @@
                 _self.data3 = []
                 this.$http.get('/api/label/findAllLabelByPages/1/10')
                     .then(function (data) {
+                        console.log(data)
                         var response = data.data.data
                         var length = response.rows.length
                         _self.pageTotal2 = response.total
@@ -711,7 +708,10 @@
                             _self.data3.push(reponseObj)
                         }
                     //    _self.customerlabelGroup = _customerlabelGroup
+                    }).catch(function(e){
+                        console.log(e)
                     })
+
             },
             selectionChange(e) {
                 let _self = this

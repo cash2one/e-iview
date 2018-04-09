@@ -354,7 +354,8 @@
                         this.$Message.error('新增失败!');
                     }
                 })
-            }
+            },
+            cancel(){}
         },
         mounted() {
             this.openEdi()

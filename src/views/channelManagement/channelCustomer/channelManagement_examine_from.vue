@@ -58,6 +58,9 @@
                 <FormItem label="服务梯队" prop="backup">
                     <Input size="small" type="textarea" v-model="formValidate.backup" disabled/>
                 </FormItem>
+                <FormItem label="备注信息" prop="notes">
+                    <Input size="small" type="textarea" v-model="formValidate.notes" disabled/>
+                </FormItem>
             </Form>
         </Card>
     </div>
@@ -96,7 +99,8 @@
                     sourcesubdivision: '',
                     isbound: '',
                     email: '',
-                    channelsource: ''
+                    channelsource: '',
+                    notes:''
                 },
                 customertype: '',
                 customerlabel: []
@@ -104,6 +108,7 @@
         },
         methods: {
             getData() {
+                console.log(this.customerid)
                 var _self = this
                 this.searchTypegroup('cluesource')
                 this.searchTypegroup('custImport')

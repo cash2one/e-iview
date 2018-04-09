@@ -539,6 +539,9 @@
                     })
                 }, 2000);
             },
+            EditCompany(){
+                
+            }
         },
         mounted() {
             this.getCompanyData()
