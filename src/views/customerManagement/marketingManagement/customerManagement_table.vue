@@ -17,7 +17,7 @@
                         style="float: right"
                         placement="bottom-end"
                         @on-popper-show="isSearch(true)"
-                        width="400">
+                        width="400" @keydown.enter="handleSubmit('formValidate')">
                     <Button type="text" icon="funnel" @click="getSelectOptions">筛选</Button>
                     <div class="api" slot="content" v-if="issearch">
                         <Form ref="formValidate" :model="formValidate" :label-width="50" style="margin-top: 15px">
@@ -263,6 +263,13 @@
             }
         },
         methods: {
+            ok(){
+
+            },
+
+            cancel(){
+
+            },
 
             // 表格数据请求
             getTableData() {

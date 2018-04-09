@@ -13,6 +13,12 @@
                 :data="data6"
                 style="margin-top: 15px"
         ></Table>
+        <Row>
+            <Col style="margin:10px">
+                <div style="float:left">总计：</div>
+                <div style="float:right">消费总额：{{total_paynumber}}&nbsp;&nbsp;&nbsp;&nbsp;已付款总额：{{total_realnumber}}&nbsp;&nbsp;&nbsp;&nbsp;欠款总额：{{total_neednumber}}</div>
+            </Col>
+        </Row>
     </div>
 </template>
 
@@ -22,6 +28,10 @@
         props: ['customerid'],
         data() {
             return {
+                length:0,
+                total_neednumber:0,
+                total_paynumber:0,
+                total_realnumber:0,
                 data6: [],
                 columns7: [
                     {
@@ -59,10 +69,11 @@
         methods: {
             getCompanyData() {
                 var _self = this
-                var url = '/api/customer/findCustomerOrderById/' + _self.customerid
-
+                var url = '/customer/findCustomerOrderById/' + _self.customerid
                 function doSuccess(response) {
                     var _customerData = response.data.data
+                    _self.length = _customerData.length
+                    console.log(_customerData.length)
                     for (var i = 0; i < _customerData.length; i++) {
                         var _responseArray = {}
                         _responseArray.ordercode = _customerData[i].ordercode
@@ -75,6 +86,10 @@
                         _responseArray.createDate = _customerData[i].createDate
                         _responseArray.updatedate = _customerData[i].updatedate
                         _self.data6.push(_responseArray)
+                        _self.total_neednumber += _customerData[i].neednumber
+                        _self.total_paynumber += _customerData[i].paynumber
+                        _self.total_realnumber += _customerData[i].realnumber
+                        
                     }
                 }
 
@@ -84,10 +99,24 @@
                 if (row.neednumber != 0) {
                     return 'demo-table-error-row';
                 }
-            }
+            },
+            // count(){
+            //     var _that = this
+
+            //     for(let i = 0;i<_that.length;i++){
+            //         console.log(_that.data6[3].neednumber)
+            //         console.log(_that.data6[3].paynumber)
+            //         console.log(_that.data6[3].realnumber)
+            //         _that.total_neednumber = _that.total_neednumber + _that.data[i].neednumber
+            //         _that.total_paynumber = _that.total_paynumber + _that.data[i].paynumber
+            //         _that.total_realnumber = _that.total_realnumber + _that.data[i].realnumber
+            //     }
+                
+            // }
         },
         mounted() {
             this.getCompanyData()
+            // this.count()
         }
     }
 </script>

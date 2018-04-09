@@ -107,7 +107,7 @@
 <script>
 
     export default {
-        props: ['modal1', 'customerid'],
+        props: ['modal1', 'customerid','data'],
         data() {
             return {
                 columns: [{
@@ -199,9 +199,14 @@
             }
         },
         methods: {
+            selectRow(){
+
+            },
+
             ok() {
                 this.$Message.info('Clicked ok');
             },
+            
             cancel() {
                 var _self = this
 //                this.$Message.info('Clicked cancel');

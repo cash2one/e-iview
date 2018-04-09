@@ -591,9 +591,9 @@
 
                 this.searchTypegroup('departAlias')
                 let _departAliasArr = JSON.parse(localStorage.getItem('departAlias'))
-
+                // console.log(_departAliasArr.length)
                 for (let i = 0; i < _departAliasArr.length; i++) {
-
+                    
                     let _departAliasObj = {}
 
                     _departAliasObj.label = _departAliasArr[i].typename

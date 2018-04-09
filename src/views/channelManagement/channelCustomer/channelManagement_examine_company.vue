@@ -519,6 +519,8 @@
                                 headers: {'Content-Type': 'application/json'},
                             })
                                 .then(function (response) {
+                                    _self.loading = true
+                                    // console.log(response)
                                     if (response.data.msgCode == '40000') {
                                         _self.$Message.success('修改成功!')
                                         _self.modal3 = false
@@ -537,6 +539,9 @@
                     })
                 }, 2000);
             },
+            EditCompany(){
+                
+            }
         },
         mounted() {
             this.getCompanyData()

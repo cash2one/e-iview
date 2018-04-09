@@ -1,5 +1,6 @@
 import Main from '@/views/Main.vue';
-
+// test作为测试页面接口，不部署到生产阶段，路径test也只适用于开发阶段
+// import Test from '@/views/test/App.vue'
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
     path: '/login',
@@ -133,6 +134,23 @@ export const appRouter = [
                     require(['@/views/customerManagement/customerTabManagement/customerTabManagement.vue'], resolve);
                 }
             },
+        ]
+    },
+    {
+        path: '/test',
+        icon: 'social-windows',
+        name: 'companyManagement',
+        title: '企业管理',
+        component:Main,
+        children:[
+            {
+                path: 'test',
+                title: '企业管理',
+                name: 'test',
+                component: resolve =>{
+                    require(['@/views/test/App.vue'],resolve)
+                }
+            }
         ]
     },
     {

@@ -91,7 +91,8 @@
             },
             cancel(name) {
                 this.$refs[name].resetFields();
-            }
+            },
+            rowDblClick(){}
         },
         mounted() {
             this.getCustomerRelation()

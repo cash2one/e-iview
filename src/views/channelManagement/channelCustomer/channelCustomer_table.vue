@@ -3,7 +3,7 @@
         <Card>
             <Row>
                 <ButtonGroup>
-                    <Button type="primary" icon="plus" @click="modal33 = true">录入</Button>
+                    <Button type="primary" icon="plus" @click="modal_add = true">录入</Button>
                     <Button type="primary" icon="ios-color-wand-outline" @click="downloadExcel">导出Excel</Button>
                 </ButtonGroup>
             </Row>
@@ -26,13 +26,13 @@
             </Row>
         </Card>
         <Modal
-                v-model="modal33"
+                v-model="modal_add"
                 title="录入"
                 :loading="loading"
                 @on-ok="handleSubmit('formValidate')"
                 @on-cancel="cancel('formValidate')">
             <Form ref="formValidate" :rules="ruleValidate" :model="formValidate" :label-width="80">
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="客户名称" prop="customerName">
                         <Input v-model="formValidate.customerName" size="small"></Input>
@@ -44,7 +44,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="固话" prop="customerTel">
                         <Input v-model="formValidate.customerTel" size="small"></Input>
@@ -56,7 +56,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="微信" prop="customerWechat">
                         <Input v-model="formValidate.customerWechat" size="small"></Input>
@@ -84,7 +84,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <Row :gutter="16">
+                <Row :gutter="16" style="height:56px">
                     <Col span="12">
                     <FormItem label="客户等级" prop="customerLevel">
                         <Select v-model="formValidate.customerLevel" size="small">
@@ -95,7 +95,7 @@
                     </FormItem>
                     </Col>
                 </Row>
-                <FormItem label="标签" prop="customerTags">
+                <FormItem label="标签" prop="customerTags" style="height:56px">
                     <Tag v-for="item in customerlabelGroup" :key="item" :name="item" :id="item.id" closable
                          @on-close="handleClose2">
                         {{ item.labelName }}
@@ -178,7 +178,7 @@
                 }
             };
             return {
-                modal33: false,
+                modal_add: false,
                 addTag: false,
                 loading: true,
                 pageTotal: '',
@@ -190,6 +190,9 @@
                 areaValue: [],
                 customertypeValue: [],
                 importlevelValue: [],
+                pageSize: '10',
+                labelpagesize: '10',
+                labelpage:'1',
                 formValidate: {
                     customerName: '',
                     customerTel: '',
@@ -360,9 +363,10 @@
 
                 function doSuccess(response) {
                     let _data = response.data.data
+                    console.log(_data)
 
 //                    _self.searchTypegroup('customerType')
-                    _self.pageTotal = _data.total
+                    _self.pageTotal = Number(_data.total)
 
                     for (let i = 0; i < _data.rows.length; i++) {
                         /*   let _customerTypeArr = JSON.parse(localStorage.getItem('customerType'))
@@ -405,13 +409,13 @@
             // 改变页码
             pageChange(a) {
                 let _self = this
+               
                 let url = '/channel/customer/channel/' + a + '/' + _self.pageSize + '/list'
 
                 _self.data2 = []
 
                 function doSuccess(response) {
                     let _data = response.data.data
-
 //                    _self.searchTypegroup('customerType')
                     _self.pageTotal = _data.total
 
@@ -437,6 +441,7 @@
                             customer_id: _data.rows[i].customer_id,
                             updatedate: _data.rows[i].updatedate,
                             createby: _data.rows[i].createby,
+                            customer_mobile_phone:_data.rows[i].customer_mobile_phone,
                             people: [
                                 {
                                     customer_mobile_phone: _data.rows[i].customer_mobile_phone,
@@ -445,7 +450,7 @@
                                     customerqq: _data.rows[i].customerqq,
                                 }
                             ]
-                        })
+                        })                       
                     }
                 }
 
@@ -487,6 +492,7 @@
                             customer_id: _data.rows[i].customer_id,
                             updatedate: _data.rows[i].updatedate,
                             createby: _data.rows[i].createby,
+                            customer_mobile_phone:_data.rows[i].customer_mobile_phone,
                             people: [
                                 {
                                     customer_mobile_phone: _data.rows[i].customer_mobile_phone,
@@ -586,9 +592,8 @@
             },
             handleSubmit(name) {
                 let _self = this
-
                 setTimeout(() => {
-                        this.loading = false;
+                    this.loading = false;
                     this.$refs[name].validate((valid) => {
                         if (valid) {
                             if (_self.customerlabelGroup != undefined) {
@@ -606,9 +611,10 @@
                                 });
                                 this.$Message.error('电话、固话、QQ、微信必须填写一个');
                             } else {
+                                _self.loading = true
                                 this.$http({
                                     method: 'post',
-                                    url: '/api/channel/customer/channel/create',
+                                    url: 'api/channel/customer/channel/create',
                                     data: _self.formValidate,
                                 })
                                     .then(function (response) {
@@ -616,6 +622,7 @@
                                             _self.$Message.success('新增成功!')
                                             _self.cancel('formValidate')
                                             _self.getData()
+                                            _self.modal_add = false
                                         }
                                     })
                             }
@@ -677,19 +684,21 @@
 
                 this.DownloadExcel(url, JSON.stringify(arrdata))
             },
-
+            //  获取标签信息
             getLabelData() {
                 var _self = this
                 _self.data3 = []
                 this.$http.get('/api/label/findAllLabelByPages/1/10')
                     .then(function (data) {
+                        console.log(data)
                         var response = data.data.data
-                        _self.pageTotal2 = response.length
+                        var length = response.rows.length
+                        _self.pageTotal2 = response.total
                         let _customerlabelGroup = []
-                        for (var i = 0; i < response.length; i++) {
+                        for (var i = 0; i < length; i++) {
                             var reponseObj = {}
-                            reponseObj.labelName = response[i].labelName
-                            reponseObj.id = response[i].id
+                            reponseObj.labelName = response.rows[i].labelName
+                            reponseObj.id = response.rows[i].id
                             for (let i = 0; i < _self.customerlabelGroup.length; i++) {
                                 if (reponseObj.labelName == _self.customerlabelGroup[i].labelName) {
                                     reponseObj._checked = true
@@ -698,8 +707,11 @@
                             }
                             _self.data3.push(reponseObj)
                         }
-//                        _self.customerlabelGroup = _customerlabelGroup
+                    //    _self.customerlabelGroup = _customerlabelGroup
+                    }).catch(function(e){
+                        console.log(e)
                     })
+
             },
             selectionChange(e) {
                 let _self = this
@@ -712,6 +724,65 @@
                     _self.customerlabelGroup.push(_labels)
                 }
             },
+            ok2(){
+
+            },
+            cancel2(){
+
+            },
+            pageChange2(index){
+                var _self = this
+                _self.labelpage = index
+                _self.data3 = []                
+                var url = '/api/label/findAllLabelByPages/'+_self.labelpage +'/' + _self.labelpagesize
+                this.$http.get(url)
+                    .then(function (data) {
+                        var response = data.data.data
+                        var length = response.rows.length
+                        _self.pageTotal2 = response.total
+                        let _customerlabelGroup = []
+                        for (var i = 0; i < length; i++) {
+                            var reponseObj = {}
+                            reponseObj.labelName = response.rows[i].labelName
+                            reponseObj.id = response.rows[i].id
+                            for (let i = 0; i < _self.customerlabelGroup.length; i++) {
+                                if (reponseObj.labelName == _self.customerlabelGroup[i].labelName) {
+                                    reponseObj._checked = true
+                                    _customerlabelGroup.push(reponseObj)
+                                }
+                            }
+                            _self.data3.push(reponseObj)
+                        }
+                    //    _self.customerlabelGroup = _customerlabelGroup
+                    })
+            },
+            pageSizeChange2(index){
+                var _self = this
+                _self.labelpagesize = index
+                _self.data3 = []                
+                var url = '/api/label/findAllLabelByPages/'+_self.labelpage +'/' + _self.labelpagesize
+                this.$http.get(url)
+                    .then(function (data) {
+                        var response = data.data.data
+                        var length = response.rows.length
+                        _self.pageTotal2 = response.total
+                        let _customerlabelGroup = []
+                        for (var i = 0; i < length; i++) {
+                            var reponseObj = {}
+                            reponseObj.labelName = response.rows[i].labelName
+                            reponseObj.id = response.rows[i].id
+                            for (let i = 0; i < _self.customerlabelGroup.length; i++) {
+                                if (reponseObj.labelName == _self.customerlabelGroup[i].labelName) {
+                                    reponseObj._checked = true
+                                    _customerlabelGroup.push(reponseObj)
+                                }
+                            }
+                            _self.data3.push(reponseObj)
+                        }
+                    //    _self.customerlabelGroup = _customerlabelGroup
+                    })
+
+            }
 
         },
         mounted() {

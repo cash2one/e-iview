@@ -12,6 +12,8 @@ import axios from 'axios'
 
 Vue.use(VueI18n);
 Vue.use(iView);
+
+//  axios继承给VUE，当做一个实例，可以使用vue-axios，可以使用vue.use
 Vue.prototype.$http = axios
 
 Vue.prototype.searchTypegroup = function (code){
@@ -35,6 +37,7 @@ Vue.prototype.searchTypegroup = function (code){
 
 }
 
+//  获取数据GetData方法
 Vue.prototype.GetData = function (url, doSuccess, otherConditions){
 
     let _self = this
@@ -218,7 +221,7 @@ new Vue({
         // 权限菜单过滤相关
         this.$store.commit('updateMenulist');
         // iview-admin检查更新
-        util.checkUpdate(this);
+        // util.checkUpdate(this); // util中未配置
     },
     created () {
         let tagsList = [];

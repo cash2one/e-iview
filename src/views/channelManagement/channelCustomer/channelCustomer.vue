@@ -9,10 +9,10 @@
                 @on-ok="ok"
                 @on-cancel="cancel">
             <Row>
-                <Col span="5">
+                <Col span="6">
                 <channel-from v-if="isExamine" :customerid='customerid'></channel-from>
                 </Col>
-                <Col span="19">
+                <Col span="18">
                 <Card>
                     <Collapse accordion>
                         <Panel name="Company">
@@ -28,8 +28,9 @@
                             <P slot="content">
                                 <channel-fllow-up v-if="isExamine"
                                                   :customerid='customerid'></channel-fllow-up>
-                                <edit-collapse-follow-up v-if="isEdit"
-                                                         :customerid='customerid'></edit-collapse-follow-up>
+                                <!-- 以下组件未注册 -->
+                                <!-- <edit-collapse-follow-up v-if="isEdit"
+                                                         :customerid='customerid'></edit-collapse-follow-up> -->
                             </P>
                         </Panel>
                         <Panel name="Order">
@@ -99,6 +100,12 @@
                 _self.customerid = ''
                 _self.isExamine = false
             },
+            ok(){
+                
+            },
+            isEdit(){
+
+            }
         }
     }
 </script>
