@@ -70,6 +70,7 @@
                 if (_self.count > 2) {
                     _submit.randomCode = _self.form.code
                 }
+
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
                         let url = '/user/login/'

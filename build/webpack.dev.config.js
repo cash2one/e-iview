@@ -19,7 +19,7 @@ module.exports = merge(webpackBaseConfig, {
         //  测试时，使用8089端口，8088仅为备用
         proxy: {
             '/api': {
-                target: 'http://192.168.0.222:9000/',
+                target: 'http://192.168.0.220:9000/',
                 pathRewrite: {'^/api' : ''},
                 changeOrigin: true
             }

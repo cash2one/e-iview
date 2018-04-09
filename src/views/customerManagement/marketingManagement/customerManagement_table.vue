@@ -578,9 +578,10 @@
                         }
                     }
                 }
-
+                _self.customertypeValue = []
                 _self.customertypeValue = finalArrayData
 
+                _self.customersourceValue = []
                 // 下拉框-客户来源
                 for (var i = 0; i < _cluesourceArr.length; i++) {
 
@@ -591,6 +592,7 @@
                     _self.customersourceValue.push(customersourceObj)
                 }
 
+                _self.areaValue = []
                 // 下拉框-区域
                 for (var i = 0; i < _areaArr.length; i++) {
 
@@ -601,6 +603,7 @@
                     _self.areaValue.push(areaObj)
                 }
 
+                _self.issendValue = []
                 // 下拉框-发送短信
                 for (var i = 0; i < _sf_ynArr.length; i++) {
 
@@ -611,6 +614,7 @@
                     _self.issendValue.push(issendObj)
                 }
 
+                _self.AutoCompletedata = []
                 this.$http.all([
                     this.$http.get('/api/user/findAllUsers'),
                 ])

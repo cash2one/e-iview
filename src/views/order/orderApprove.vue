@@ -1,7 +1,7 @@
 <template>
     <div>
         <Tabs value="name1">
-            <TabPane label="查看已审批" name="name1">
+            <TabPane label="订单审批" name="name1">
                 <Card>
                     <Row>
                         <ButtonGroup>
@@ -14,7 +14,7 @@
                     </Row>
                 </Card>
             </TabPane>
-            <TabPane label="订单审批" name="name2">
+            <TabPane label="查看已审批" name="name2">
             </TabPane>
         </Tabs>
     </div>
@@ -109,6 +109,21 @@
                     }
                 ],
             }
+        },
+        methods: {
+            getTableData() {
+                let _self = this
+                let url = '/order/list?page=1&pageSize=10&isAudit=N'
+
+                function doSuccess(response) {
+                    console.log(response.data.data)
+                }
+
+                this.GetData(url, doSuccess)
+            }
+        },
+        mounted() {
+            this.getTableData()
         }
     }
 </script>
